@@ -1,0 +1,78 @@
+[gd_scene format=3 uid="uid://c8sn1k7ijb6v7"]
+
+[ext_resource type="Texture2D" uid="uid://bqxihnsm5takt" path="res://textures/texture_07.png" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://bkgtnjlagmjq2" path="res://character_body_3d.gd" id="2_0xm2m"]
+[ext_resource type="Script" uid="uid://d16fkngcaouh8" path="res://knife_holder.gd" id="3_1bvp3"]
+[ext_resource type="Script" uid="uid://bwnogcs7fl3f8" path="res://knife.gd" id="4_lquwl"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ig7tw"]
+
+[sub_resource type="Sky" id="Sky_3hjku"]
+sky_material = SubResource("ProceduralSkyMaterial_ig7tw")
+
+[sub_resource type="Environment" id="Environment_v3a5a"]
+background_mode = 2
+sky = SubResource("Sky_3hjku")
+tonemap_mode = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bdcc4"]
+albedo_texture = ExtResource("1_ig7tw")
+
+[sub_resource type="QuadMesh" id="QuadMesh_3hjku"]
+material = SubResource("StandardMaterial3D_bdcc4")
+size = Vector2(24, 24)
+orientation = 1
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_v3a5a"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_v3a5a"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_v3a5a"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1bvp3"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_v3a5a"]
+left_to_right = 2.0
+size = Vector3(0.23, 1, 0.21)
+
+[node name="Main" type="Node3D" unique_id=1037926069]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1252001221]
+environment = SubResource("Environment_v3a5a")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=286547347]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+light_color = Color(1, 0.9098039, 0.91764706, 1)
+shadow_enabled = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1539506947]
+mesh = SubResource("QuadMesh_3hjku")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D" unique_id=1438443089]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D" unique_id=1055680507]
+shape = SubResource("WorldBoundaryShape3D_v3a5a")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1928166506]
+transform = Transform3D(1, 0, 0, 0, 0.32524568, 0.9456296, 0, -0.9456296, 0.32524568, 0, 13.648539, 7.781438)
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="." unique_id=1288390025]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.146304, 1.749546, 0)
+script = ExtResource("2_0xm2m")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D" unique_id=495688890]
+shape = SubResource("CapsuleShape3D_v3a5a")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D" unique_id=1917269850]
+mesh = SubResource("CapsuleMesh_v3a5a")
+surface_material_override/0 = SubResource("StandardMaterial3D_1bvp3")
+
+[node name="KnifeHolder" type="Node3D" parent="CharacterBody3D" unique_id=868031000]
+script = ExtResource("3_1bvp3")
+
+[node name="Knife" type="Node3D" parent="CharacterBody3D/KnifeHolder" unique_id=2008080015]
+transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.2, 1.8557582, 0, 0)
+script = ExtResource("4_lquwl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D/KnifeHolder/Knife" unique_id=198630414]
+mesh = SubResource("PrismMesh_v3a5a")
