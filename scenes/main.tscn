@@ -1,0 +1,314 @@
+[gd_scene format=3 uid="uid://c8sn1k7ijb6v7"]
+
+[ext_resource type="Texture2D" uid="uid://bqxihnsm5takt" path="res://textures/texture_07.png" id="1_a8y0u"]
+[ext_resource type="Script" uid="uid://dwsbain2i2hs5" path="res://scripts/life_bar.gd" id="1_jbj1t"]
+[ext_resource type="PackedScene" uid="uid://cgya1kocq4amq" path="res://prefabs/heart_ui.tscn" id="2_jbj1t"]
+[ext_resource type="Script" uid="uid://bkgtnjlagmjq2" path="res://scripts/character_body_3d.gd" id="2_jkv2x"]
+[ext_resource type="Script" uid="uid://cx6tfdws7bcma" path="res://scripts/dash_charge.gd" id="3_jbj1t"]
+[ext_resource type="Script" uid="uid://d16fkngcaouh8" path="res://scripts/knife_follow_holder.gd" id="4_muem4"]
+[ext_resource type="Script" uid="uid://cthokyic6rp4j" path="res://scripts/debug_visuals.gd" id="5_dp3eg"]
+[ext_resource type="Script" uid="uid://duxpse3yomto" path="res://scripts/player_damageable.gd" id="5_muem4"]
+[ext_resource type="Script" uid="uid://bwnogcs7fl3f8" path="res://scripts/knife.gd" id="6_0ld40"]
+[ext_resource type="Script" uid="uid://c3ticqx31o5xn" path="res://scripts/knife_visual_manager.gd" id="7_gqmmt"]
+[ext_resource type="Script" uid="uid://bit2ncux0jsm7" path="res://scripts/knife_hit_manager.gd" id="8_yc10j"]
+[ext_resource type="Script" uid="uid://bmij1nyxkj3wm" path="res://scripts/knife_fly_manager.gd" id="9_jscy8"]
+[ext_resource type="Script" uid="uid://ca62vebyl8okn" path="res://scripts/damageable.gd" id="10_pm3ni"]
+[ext_resource type="Script" uid="uid://bm08pp6e32dvu" path="res://scripts/invincibility_flash.gd" id="11_y6deb"]
+[ext_resource type="Material" uid="uid://husbjvdyujmi" path="res://materials/pixel_perfect_outline.tres" id="12_og1vs"]
+[ext_resource type="Script" uid="uid://chhm3rnvd3vsl" path="res://scripts/enemy.gd" id="13_0ld40"]
+[ext_resource type="Script" uid="uid://burlfs2kvsdi4" path="res://scripts/bullet_spawner.gd" id="13_2wyq8"]
+[ext_resource type="PackedScene" uid="uid://cbo34i1nmq84k" path="res://prefabs/bullet.tscn" id="14_vxglm"]
+[ext_resource type="PackedScene" uid="uid://crkpvuefp6c5b" path="res://prefabs/heart_pickup.tscn" id="19_0ld40"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ig7tw"]
+
+[sub_resource type="Sky" id="Sky_3hjku"]
+sky_material = SubResource("ProceduralSkyMaterial_ig7tw")
+
+[sub_resource type="Environment" id="Environment_v3a5a"]
+background_mode = 2
+sky = SubResource("Sky_3hjku")
+tonemap_mode = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bdcc4"]
+albedo_texture = ExtResource("1_a8y0u")
+
+[sub_resource type="QuadMesh" id="QuadMesh_3hjku"]
+material = SubResource("StandardMaterial3D_bdcc4")
+size = Vector2(24, 24)
+orientation = 1
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_v3a5a"]
+
+[sub_resource type="Animation" id="Animation_w48qg"]
+resource_name = "new_animation"
+length = 4.0
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Enemy/BulletSpawner")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.89999986, 1.7333333),
+"transitions": PackedFloat32Array(1, 1, 1),
+"values": [{
+"args": [1],
+"method": &"fire_count"
+}, {
+"args": [3],
+"method": &"fire_count"
+}, {
+"args": [5],
+"method": &"fire_count"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_vivmo"]
+_data = {
+&"new_animation": SubResource("Animation_w48qg")
+}
+
+[sub_resource type="Curve" id="Curve_ycdy4"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.082397, 0.10769236), 2.3581192, 2.3581192, 0, 0, Vector2(0.2846442, 0.5692308), 0.9335664, 0.9335664, 0, 0, Vector2(1, 1), 0.21394251, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_v3a5a"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_v3a5a"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1bvp3"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f8h0b"]
+albedo_color = Color(1, 0, 1, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_3hjku"]
+radius = 0.1
+height = 0.2
+
+[sub_resource type="TorusMesh" id="TorusMesh_dg77c"]
+inner_radius = 0.4
+outer_radius = 0.15
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dg77c"]
+albedo_color = Color(0.2509804, 1, 0.25490198, 1)
+
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_f8h0b"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5vw27"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_efxa6"]
+top_radius = 0.06
+bottom_radius = 0.3
+height = 1.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_v3a5a"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_v3a5a"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nmjmg"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_v3a5a"]
+
+[node name="Main" type="Node3D" unique_id=1037926069]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=492608459]
+
+[node name="UI" type="Control" parent="CanvasLayer" unique_id=4957590]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="LifeBarMargin" type="MarginContainer" parent="CanvasLayer/UI" unique_id=541500688]
+layout_mode = 1
+offset_right = 272.0
+offset_bottom = 128.0
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+
+[node name="LifeBar" type="HBoxContainer" parent="CanvasLayer/UI/LifeBarMargin" unique_id=691957141]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_constants/separation = 12
+script = ExtResource("1_jbj1t")
+heart = ExtResource("2_jbj1t")
+
+[node name="Heart" parent="CanvasLayer/UI/LifeBarMargin/LifeBar" unique_id=721561373 instance=ExtResource("2_jbj1t")]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="Heart2" parent="CanvasLayer/UI/LifeBarMargin/LifeBar" unique_id=141196254 instance=ExtResource("2_jbj1t")]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="Heart3" parent="CanvasLayer/UI/LifeBarMargin/LifeBar" unique_id=1309629986 instance=ExtResource("2_jbj1t")]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1252001221]
+environment = SubResource("Environment_v3a5a")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=286547347]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+light_color = Color(1, 0.9098039, 0.91764706, 1)
+shadow_enabled = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1539506947]
+mesh = SubResource("QuadMesh_3hjku")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D" unique_id=1438443089]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D" unique_id=1055680507]
+shape = SubResource("WorldBoundaryShape3D_v3a5a")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1928166506]
+transform = Transform3D(1, 0, 0, 0, 0.32524568, 0.9456296, 0, -0.9456296, 0.32524568, 0, 13.648539, 7.781438)
+
+[node name="LevelManager" type="Node" parent="." unique_id=218049675]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="LevelManager" unique_id=1835240327]
+root_node = NodePath("../..")
+libraries/ = SubResource("AnimationLibrary_vivmo")
+
+[node name="PlayerSubtree" type="Node" parent="." unique_id=559314304]
+unique_name_in_owner = true
+
+[node name="Tim" type="CharacterBody3D" parent="PlayerSubtree" unique_id=1288390025]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.146304, 1.0491691, 0)
+collision_layer = 2
+script = ExtResource("2_jkv2x")
+
+[node name="PlayerDamageable" type="Node" parent="PlayerSubtree/Tim" unique_id=1140139603]
+unique_name_in_owner = true
+script = ExtResource("5_muem4")
+
+[node name="States" type="Node" parent="PlayerSubtree/Tim" unique_id=1028104413]
+
+[node name="DashCharge" type="Node" parent="PlayerSubtree/Tim/States" unique_id=127680061]
+script = ExtResource("3_jbj1t")
+charge_time_dist_curve = SubResource("Curve_ycdy4")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerSubtree/Tim" unique_id=495688890]
+shape = SubResource("CapsuleShape3D_v3a5a")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PlayerSubtree/Tim" unique_id=1917269850]
+mesh = SubResource("CapsuleMesh_v3a5a")
+surface_material_override/0 = SubResource("StandardMaterial3D_1bvp3")
+
+[node name="KnifeFollowHolder" type="Node3D" parent="PlayerSubtree/Tim" unique_id=868031000]
+script = ExtResource("4_muem4")
+
+[node name="KnifeFollowPoint" type="Marker3D" parent="PlayerSubtree/Tim/KnifeFollowHolder" unique_id=73373932]
+transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.2, 1.8, 0, 0)
+
+[node name="DebugKnifePoint" type="MeshInstance3D" parent="PlayerSubtree/Tim/KnifeFollowHolder/KnifeFollowPoint" unique_id=389476556]
+material_override = SubResource("StandardMaterial3D_f8h0b")
+mesh = SubResource("SphereMesh_3hjku")
+
+[node name="DebugVisuals" type="Node" parent="PlayerSubtree/Tim" unique_id=907704069 node_paths=PackedStringArray("dash_charge", "mesh")]
+script = ExtResource("5_dp3eg")
+dash_charge = NodePath("../States/DashCharge")
+mesh = NodePath("../MeshInstance3D")
+
+[node name="MouseMarker" type="MeshInstance3D" parent="PlayerSubtree/Tim/DebugVisuals" unique_id=1008251832]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 5)
+top_level = true
+visible = false
+mesh = SubResource("TorusMesh_dg77c")
+
+[node name="DashMarker" type="MeshInstance3D" parent="PlayerSubtree/Tim/DebugVisuals" unique_id=271881641]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 5)
+top_level = true
+visible = false
+material_override = SubResource("StandardMaterial3D_dg77c")
+mesh = SubResource("TorusMesh_dg77c")
+
+[node name="Flymarker" type="MeshInstance3D" parent="PlayerSubtree/Tim/DebugVisuals" unique_id=1886788349]
+top_level = true
+mesh = SubResource("ImmediateMesh_f8h0b")
+
+[node name="Knife" type="Node3D" parent="PlayerSubtree" unique_id=2008080015 node_paths=PackedStringArray("follow_point")]
+unique_name_in_owner = true
+transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.2, -4.3078747, 1.0491691, 2.4531236)
+script = ExtResource("6_0ld40")
+follow_point = NodePath("../Tim/KnifeFollowHolder/KnifeFollowPoint")
+
+[node name="VisualManager" type="Node" parent="PlayerSubtree/Knife" unique_id=1870996993 node_paths=PackedStringArray("mesh_holder", "mesh")]
+script = ExtResource("7_gqmmt")
+mesh_holder = NodePath("../MeshHolder")
+mesh = NodePath("../MeshHolder/MeshInstance3D")
+
+[node name="HitManager" type="Node" parent="PlayerSubtree/Knife" unique_id=20058081 node_paths=PackedStringArray("hitbox")]
+script = ExtResource("8_yc10j")
+hitbox = NodePath("../HitBox")
+
+[node name="FlyManager" type="Node" parent="PlayerSubtree/Knife" unique_id=902053820]
+script = ExtResource("9_jscy8")
+
+[node name="MeshHolder" type="Node3D" parent="PlayerSubtree/Knife" unique_id=970053583]
+transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PlayerSubtree/Knife/MeshHolder" unique_id=198630414]
+transform = Transform3D(0.4, 0, 0, 0, -4.371139e-08, 1.52, 0, -1, -6.644131e-08, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_5vw27")
+mesh = SubResource("CylinderMesh_efxa6")
+
+[node name="HitBox" type="Area3D" parent="PlayerSubtree/Knife" unique_id=2012923324]
+collision_layer = 8
+collision_mask = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerSubtree/Knife/HitBox" unique_id=1371350171]
+shape = SubResource("SphereShape3D_v3a5a")
+
+[node name="BulletSubtree" type="Node" parent="." unique_id=83211510]
+unique_name_in_owner = true
+
+[node name="PickupSubtree" type="Node" parent="." unique_id=47071426]
+unique_name_in_owner = true
+
+[node name="Enemy" type="CharacterBody3D" parent="." unique_id=1369707777]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.70983195, 0)
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("13_0ld40")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Enemy" unique_id=1410707859]
+shape = SubResource("BoxShape3D_v3a5a")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Enemy" unique_id=13112118]
+material_override = SubResource("StandardMaterial3D_nmjmg")
+mesh = SubResource("BoxMesh_v3a5a")
+
+[node name="Damageable" type="Node" parent="Enemy" unique_id=1890893298]
+script = ExtResource("10_pm3ni")
+
+[node name="InvincibilityFlash" type="Node" parent="Enemy" unique_id=1837585408 node_paths=PackedStringArray("mesh", "damageable")]
+script = ExtResource("11_y6deb")
+mesh = NodePath("../MeshInstance3D")
+damageable = NodePath("../Damageable")
+material = ExtResource("12_og1vs")
+
+[node name="BulletSpawner" type="Node3D" parent="Enemy" unique_id=1188367627]
+script = ExtResource("13_2wyq8")
+bullet = ExtResource("14_vxglm")
+
+[node name="Marker3D" type="Marker3D" parent="Enemy/BulletSpawner" unique_id=1980826137]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.747, 0, 0.749)
+
+[node name="Marker3D2" type="Marker3D" parent="Enemy/BulletSpawner" unique_id=1808370746]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.9145753)
+
+[node name="Marker3D3" type="Marker3D" parent="Enemy/BulletSpawner" unique_id=508862833]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4498038, 0, 1.0040245)
+
+[node name="HeartPickup" parent="." unique_id=2014270448 instance=ExtResource("19_0ld40")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.7058935, 0.73596144, -5.1186485)

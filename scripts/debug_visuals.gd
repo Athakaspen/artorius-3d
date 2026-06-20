@@ -13,7 +13,9 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	if dash_charge.active:
+	if tim.is_invincible():
+		material.albedo_color = Color.BLACK
+	elif dash_charge.active:
 		var amt = dash_charge.charge_amount
 		material.albedo_color = Color(0.7-amt*0.7, 1.0, 0.7-amt*0.7)
 	else:

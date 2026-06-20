@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://cbo34i1nmq84k"]
+
+[ext_resource type="Script" uid="uid://dnjlyrmfjd7sx" path="res://scripts/bullet.gd" id="1_v7oki"]
+[ext_resource type="Texture2D" uid="uid://bea6yu2daoq55" path="res://icon.svg" id="2_v8qja"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w48qg"]
+transparency = 1
+albedo_color = Color(0.37254903, 0.77254903, 0.6862745, 1)
+albedo_texture = ExtResource("2_v8qja")
+metallic = 0.59
+metallic_specular = 0.63
+roughness = 0.75
+
+[sub_resource type="SphereMesh" id="SphereMesh_bdcc4"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_3hjku"]
+
+[node name="Bullet" type="Node3D" unique_id=2025275252]
+script = ExtResource("1_v7oki")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=15845521]
+material_override = SubResource("StandardMaterial3D_w48qg")
+mesh = SubResource("SphereMesh_bdcc4")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=201416206]
+collision_layer = 16
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=754683677]
+shape = SubResource("SphereShape3D_3hjku")

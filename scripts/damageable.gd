@@ -1,6 +1,6 @@
 extends Node
 
-@onready var parent : Node3D = get_parent()
+@onready var parent : Enemy = get_parent()
 
 @export var max_hp : int = 100
 @export var damage_cooltime : float = 0.5 # seconds
@@ -27,10 +27,7 @@ func on_hit(damage: int) -> bool:
 	parent.propagate_call("on_damage", [damage])
 	
 	if hp <= 0:
-		if parent.has_method("on_death"):
-			parent.on_death()
-		else:
-			parent.queue_free()
+		parent.on_dead()
 	
 	return true
 

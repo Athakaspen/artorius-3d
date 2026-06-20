@@ -2,6 +2,7 @@ extends CharacterBody3D
 class_name Tim
 
 @onready var player_subtree = %PlayerSubtree
+@onready var player_damageable = $PlayerDamageable
 
 @export var normal_speed = 12.0
 @export var focus_speed : float = 5.0
@@ -9,10 +10,6 @@ class_name Tim
 var is_focusing : bool = false
 
 func _physics_process(delta: float) -> void:
-	# Add the gravity.
-	#if not is_on_floor():
-		#velocity += get_gravity() * delta
-
 	# Get the input direction and handle the movement/deceleration.
 	var input_dir := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
@@ -52,3 +49,6 @@ func _input(event):
 		var len = -(origin.y - position.y) / direction.y
 		var point = origin + direction * len
 		player_subtree.propagate_call("on_mouse_move", [point])
+
+func take_damage() -> bool: return player_damageable.take_damage()
+func is_invincible(): return player_damageable.is_invincible
