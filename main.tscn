@@ -1,9 +1,17 @@
 [gd_scene format=3 uid="uid://c8sn1k7ijb6v7"]
 
 [ext_resource type="Texture2D" uid="uid://bqxihnsm5takt" path="res://textures/texture_07.png" id="1_ig7tw"]
-[ext_resource type="Script" uid="uid://bkgtnjlagmjq2" path="res://character_body_3d.gd" id="2_0xm2m"]
-[ext_resource type="Script" uid="uid://d16fkngcaouh8" path="res://knife_holder.gd" id="3_1bvp3"]
-[ext_resource type="Script" uid="uid://bwnogcs7fl3f8" path="res://knife.gd" id="4_lquwl"]
+[ext_resource type="Script" uid="uid://bkgtnjlagmjq2" path="res://scripts/character_body_3d.gd" id="2_0xm2m"]
+[ext_resource type="Script" uid="uid://d16fkngcaouh8" path="res://scripts/knife_follow_holder.gd" id="3_1bvp3"]
+[ext_resource type="Script" uid="uid://cx6tfdws7bcma" path="res://scripts/dash_charge.gd" id="3_5vw27"]
+[ext_resource type="Script" uid="uid://bwnogcs7fl3f8" path="res://scripts/knife.gd" id="4_lquwl"]
+[ext_resource type="Material" uid="uid://husbjvdyujmi" path="res://materials/pixel_perfect_outline.tres" id="5_272bh"]
+[ext_resource type="Script" uid="uid://ca62vebyl8okn" path="res://scripts/damageable.gd" id="5_lquwl"]
+[ext_resource type="Script" uid="uid://cthokyic6rp4j" path="res://scripts/debug_visuals.gd" id="6_kek77"]
+[ext_resource type="Script" uid="uid://bm08pp6e32dvu" path="res://scripts/invincibility_flash.gd" id="7_272bh"]
+[ext_resource type="Script" uid="uid://c3ticqx31o5xn" path="res://scripts/knife_visual_manager.gd" id="8_efxa6"]
+[ext_resource type="Script" uid="uid://bit2ncux0jsm7" path="res://scripts/knife_hit_manager.gd" id="9_dg77c"]
+[ext_resource type="Script" uid="uid://bmij1nyxkj3wm" path="res://scripts/knife_fly_manager.gd" id="9_ycdy4"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ig7tw"]
 
@@ -25,15 +33,46 @@ orientation = 1
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_v3a5a"]
 
+[sub_resource type="Curve" id="Curve_ycdy4"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.082397, 0.10769236), 2.3581192, 2.3581192, 0, 0, Vector2(0.2846442, 0.5692308), 0.9335664, 0.9335664, 0, 0, Vector2(1, 1), 0.21394251, 0.0, 0, 0]
+point_count = 4
+
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_v3a5a"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_v3a5a"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1bvp3"]
 
-[sub_resource type="PrismMesh" id="PrismMesh_v3a5a"]
-left_to_right = 2.0
-size = Vector3(0.23, 1, 0.21)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f8h0b"]
+albedo_color = Color(1, 0, 1, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_3hjku"]
+radius = 0.1
+height = 0.2
+
+[sub_resource type="TorusMesh" id="TorusMesh_dg77c"]
+inner_radius = 0.4
+outer_radius = 0.15
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dg77c"]
+albedo_color = Color(0.2509804, 1, 0.25490198, 1)
+
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_f8h0b"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5vw27"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_efxa6"]
+top_radius = 0.06
+bottom_radius = 0.3
+height = 1.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_v3a5a"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_v3a5a"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nmjmg"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_v3a5a"]
 
 [node name="Main" type="Node3D" unique_id=1037926069]
 
@@ -56,23 +95,111 @@ shape = SubResource("WorldBoundaryShape3D_v3a5a")
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1928166506]
 transform = Transform3D(1, 0, 0, 0, 0.32524568, 0.9456296, 0, -0.9456296, 0.32524568, 0, 13.648539, 7.781438)
 
-[node name="CharacterBody3D" type="CharacterBody3D" parent="." unique_id=1288390025]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.146304, 1.749546, 0)
+[node name="PlayerSubtree" type="Node" parent="." unique_id=559314304]
+unique_name_in_owner = true
+
+[node name="Tim" type="CharacterBody3D" parent="PlayerSubtree" unique_id=1288390025]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.146304, 1.0491691, 0)
+collision_layer = 2
 script = ExtResource("2_0xm2m")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D" unique_id=495688890]
+[node name="States" type="Node" parent="PlayerSubtree/Tim" unique_id=1028104413]
+
+[node name="DashCharge" type="Node" parent="PlayerSubtree/Tim/States" unique_id=127680061]
+script = ExtResource("3_5vw27")
+charge_time_dist_curve = SubResource("Curve_ycdy4")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerSubtree/Tim" unique_id=495688890]
 shape = SubResource("CapsuleShape3D_v3a5a")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D" unique_id=1917269850]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PlayerSubtree/Tim" unique_id=1917269850]
 mesh = SubResource("CapsuleMesh_v3a5a")
 surface_material_override/0 = SubResource("StandardMaterial3D_1bvp3")
 
-[node name="KnifeHolder" type="Node3D" parent="CharacterBody3D" unique_id=868031000]
+[node name="KnifeFollowHolder" type="Node3D" parent="PlayerSubtree/Tim" unique_id=868031000]
 script = ExtResource("3_1bvp3")
 
-[node name="Knife" type="Node3D" parent="CharacterBody3D/KnifeHolder" unique_id=2008080015]
-transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.2, 1.8557582, 0, 0)
-script = ExtResource("4_lquwl")
+[node name="KnifeFollowPoint" type="Marker3D" parent="PlayerSubtree/Tim/KnifeFollowHolder" unique_id=73373932]
+transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.2, 1.8, 0, 0)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D/KnifeHolder/Knife" unique_id=198630414]
-mesh = SubResource("PrismMesh_v3a5a")
+[node name="DebugKnifePoint" type="MeshInstance3D" parent="PlayerSubtree/Tim/KnifeFollowHolder/KnifeFollowPoint" unique_id=389476556]
+material_override = SubResource("StandardMaterial3D_f8h0b")
+mesh = SubResource("SphereMesh_3hjku")
+
+[node name="DebugVisuals" type="Node" parent="PlayerSubtree/Tim" unique_id=907704069 node_paths=PackedStringArray("dash_charge", "mesh")]
+script = ExtResource("6_kek77")
+dash_charge = NodePath("../States/DashCharge")
+mesh = NodePath("../MeshInstance3D")
+
+[node name="MouseMarker" type="MeshInstance3D" parent="PlayerSubtree/Tim/DebugVisuals" unique_id=1008251832]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 5)
+top_level = true
+visible = false
+mesh = SubResource("TorusMesh_dg77c")
+
+[node name="DashMarker" type="MeshInstance3D" parent="PlayerSubtree/Tim/DebugVisuals" unique_id=271881641]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 5)
+top_level = true
+visible = false
+material_override = SubResource("StandardMaterial3D_dg77c")
+mesh = SubResource("TorusMesh_dg77c")
+
+[node name="Flymarker" type="MeshInstance3D" parent="PlayerSubtree/Tim/DebugVisuals" unique_id=1886788349]
+top_level = true
+mesh = SubResource("ImmediateMesh_f8h0b")
+
+[node name="Knife" type="Node3D" parent="PlayerSubtree" unique_id=2008080015 node_paths=PackedStringArray("follow_point")]
+unique_name_in_owner = true
+transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.2, -4.3078747, 1.0491691, 2.4531236)
+script = ExtResource("4_lquwl")
+follow_point = NodePath("../Tim/KnifeFollowHolder/KnifeFollowPoint")
+
+[node name="VisualManager" type="Node" parent="PlayerSubtree/Knife" unique_id=1870996993 node_paths=PackedStringArray("mesh_holder", "mesh")]
+script = ExtResource("8_efxa6")
+mesh_holder = NodePath("../MeshHolder")
+mesh = NodePath("../MeshHolder/MeshInstance3D")
+
+[node name="HitManager" type="Node" parent="PlayerSubtree/Knife" unique_id=20058081 node_paths=PackedStringArray("hitbox")]
+script = ExtResource("9_dg77c")
+hitbox = NodePath("../HitBox")
+
+[node name="FlyManager" type="Node" parent="PlayerSubtree/Knife" unique_id=902053820]
+script = ExtResource("9_ycdy4")
+
+[node name="MeshHolder" type="Node3D" parent="PlayerSubtree/Knife" unique_id=970053583]
+transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PlayerSubtree/Knife/MeshHolder" unique_id=198630414]
+transform = Transform3D(0.4, 0, 0, 0, -4.371139e-08, 1.52, 0, -1, -6.644131e-08, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_5vw27")
+mesh = SubResource("CylinderMesh_efxa6")
+
+[node name="HitBox" type="Area3D" parent="PlayerSubtree/Knife" unique_id=2012923324]
+collision_layer = 8
+collision_mask = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerSubtree/Knife/HitBox" unique_id=1371350171]
+shape = SubResource("SphereShape3D_v3a5a")
+
+[node name="Enemy" type="CharacterBody3D" parent="." unique_id=1369707777]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.70983195, 0)
+collision_layer = 4
+collision_mask = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Enemy" unique_id=1410707859]
+shape = SubResource("BoxShape3D_v3a5a")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Enemy" unique_id=13112118]
+material_override = SubResource("StandardMaterial3D_nmjmg")
+mesh = SubResource("BoxMesh_v3a5a")
+
+[node name="Damageable" type="Node" parent="Enemy" unique_id=1890893298]
+script = ExtResource("5_lquwl")
+max_hp = 1000
+
+[node name="InvincibilityFlash" type="Node" parent="Enemy" unique_id=1837585408 node_paths=PackedStringArray("mesh", "damageable")]
+script = ExtResource("7_272bh")
+mesh = NodePath("../MeshInstance3D")
+damageable = NodePath("../Damageable")
+material = ExtResource("5_272bh")
