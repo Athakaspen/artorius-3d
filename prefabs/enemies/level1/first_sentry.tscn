@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://dwf02h5242f0k"]
+
+[ext_resource type="PackedScene" uid="uid://b47dut0jtxt64" path="res://prefabs/enemies/sentry.tscn" id="1_1swoe"]
+[ext_resource type="Script" uid="uid://nujnf0phlvu1" path="res://scripts/single_bullet_spawner.gd" id="6_cwxm7"]
+[ext_resource type="PackedScene" uid="uid://cbo34i1nmq84k" path="res://prefabs/bullets/simple_bullet.tscn" id="7_jg7ot"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_v3a5a"]
+height = 0.3
+
+[sub_resource type="GDScript" id="GDScript_v3a5a"]
+script/source = "extends Node
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	if abs($\"../..\".position.x) < 9:
+		$\"..\".activate()
+		self.queue_free()
+"
+
+[node name="Sentry" unique_id=1800477246 instance=ExtResource("1_1swoe")]
+move_speed = 3.0
+
+[node name="EnemyDamageable" parent="." index="3" unique_id=1689036248]
+max_hp = 20
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." index="6" unique_id=2065469973]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.28693104, -0.3844943)
+mesh = SubResource("CylinderMesh_v3a5a")
+
+[node name="SingleBulletSpawner" type="Node3D" parent="." index="7" unique_id=1240692535]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+script = ExtResource("6_cwxm7")
+fire_rate = 1.4
+bullet_speed = 6.0
+autostart = false
+bullet_res = ExtResource("7_jg7ot")
+metadata/_custom_type_script = "uid://nujnf0phlvu1"
+
+[node name="StartShooting" type="Node" parent="SingleBulletSpawner" index="0" unique_id=1919092141]
+script = SubResource("GDScript_v3a5a")

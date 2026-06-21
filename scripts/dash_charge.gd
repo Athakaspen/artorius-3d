@@ -9,6 +9,8 @@ extends Node
 
 @export var charge_time_dist_curve : Curve
 
+@export var shape_cast : ShapeCast3D
+
 ## current charge level, from 0 to 1
 var charge_amount : float = 0.0
 
@@ -34,7 +36,12 @@ func _process(delta: float) -> void:
 	var scaled_charge_amount = charge_time_dist_curve.sample(charge_amount)
 	var distance = min_distance + scaled_charge_amount * distance_range
 	var dash_vector = distance * direction
-	dash_target_point = tim.global_position + dash_vector
+	
+	shape_cast.target_position = dash_vector
+	shape_cast.force_shapecast_update()
+	var fraction = shape_cast.get_closest_collision_safe_fraction()
+	
+	dash_target_point = tim.global_position + dash_vector * fraction
 	
 	%PlayerSubtree.propagate_call("on_dash_point_update", [dash_target_point])
 
@@ -49,9 +56,9 @@ func on_dash_released():
 		return
 	
 	tim.translate(dash_target_point - tim.position)
-	
 	active = false
 	charge_amount = 0
+	%PlayerSubtree.propagate_call("on_dash_performed")
 
 func on_mouse_move(point: Vector3):
 	if !active: return

@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://crgefksb7siru"]
+
+[ext_resource type="Script" uid="uid://bfnblqxffge0f" path="res://prefabs/enemies/level1/l1_swoop.gd" id="1_wy53u"]
+[ext_resource type="Script" uid="uid://bm08pp6e32dvu" path="res://scripts/components/hit_flash.gd" id="2_m5iiy"]
+[ext_resource type="Script" uid="uid://ca62vebyl8okn" path="res://scripts/components/enemy_damageable.gd" id="3_ejhuc"]
+[ext_resource type="Script" uid="uid://dwuxnpnlm8872" path="res://scripts/components/drop_pickup.gd" id="4_d2rx3"]
+[ext_resource type="Script" uid="uid://df3aqncha7eo5" path="res://scripts/components/free_on_dead.gd" id="5_e1vkx"]
+[ext_resource type="Script" uid="uid://nujnf0phlvu1" path="res://scripts/single_bullet_spawner.gd" id="6_ejhuc"]
+[ext_resource type="Script" uid="uid://b0tgts2hctv6g" path="res://scripts/components/look_at_player.gd" id="7_d2rx3"]
+[ext_resource type="PackedScene" uid="uid://cbo34i1nmq84k" path="res://prefabs/bullets/simple_bullet.tscn" id="7_e1vkx"]
+
+[sub_resource type="Curve" id="Curve_jkv2x"]
+_data = [Vector2(0, 1), 0.0, -5.5424533, 0, 0, Vector2(0.4966667, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 5.9748497, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_jbj1t"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.52, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_v3a5a"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nmjmg"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_wy53u"]
+height = 1.0
+
+[node name="Swoop" type="CharacterBody3D" unique_id=1800477246]
+collision_layer = 4
+script = ExtResource("1_wy53u")
+max_height = 15.0
+min_height = 6.5
+height_curve = SubResource("Curve_jkv2x")
+max_speed = 8.0
+speed_curve = SubResource("Curve_jbj1t")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1817085147]
+shape = SubResource("BoxShape3D_v3a5a")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1321960600]
+material_override = SubResource("StandardMaterial3D_nmjmg")
+mesh = SubResource("CylinderMesh_wy53u")
+
+[node name="HitFlash" type="Node" parent="." unique_id=1901981780 node_paths=PackedStringArray("mesh")]
+script = ExtResource("2_m5iiy")
+mesh = NodePath("../MeshInstance3D")
+metadata/_custom_type_script = "uid://bm08pp6e32dvu"
+
+[node name="EnemyDamageable" type="Node" parent="." unique_id=1689036248]
+script = ExtResource("3_ejhuc")
+max_hp = 40
+metadata/_custom_type_script = "uid://ca62vebyl8okn"
+
+[node name="DropPickup" type="Node" parent="." unique_id=521959786]
+script = ExtResource("4_d2rx3")
+metadata/_custom_type_script = "uid://dwuxnpnlm8872"
+
+[node name="FreeOnDead" type="Node" parent="." unique_id=2028756952]
+script = ExtResource("5_e1vkx")
+metadata/_custom_type_script = "uid://df3aqncha7eo5"
+
+[node name="SingleBulletSpawner" type="Node3D" parent="." unique_id=2004715234]
+script = ExtResource("6_ejhuc")
+fire_rate = 0.64
+autostart = false
+bullet_res = ExtResource("7_e1vkx")
+metadata/_custom_type_script = "uid://nujnf0phlvu1"
+
+[node name="LookAtPlayer" type="Node" parent="SingleBulletSpawner" unique_id=232492797]
+script = ExtResource("7_d2rx3")
+metadata/_custom_type_script = "uid://b0tgts2hctv6g"

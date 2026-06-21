@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://c8sn1k7ijb6v7"]
 
 [ext_resource type="Texture2D" uid="uid://bqxihnsm5takt" path="res://textures/texture_07.png" id="1_a8y0u"]
-[ext_resource type="Script" uid="uid://dwsbain2i2hs5" path="res://scripts/ui/life_bar.gd" id="1_jbj1t"]
+[ext_resource type="Script" uid="uid://dwsbain2i2hs5" path="res://scripts/life_bar.gd" id="1_jbj1t"]
 [ext_resource type="PackedScene" uid="uid://cgya1kocq4amq" path="res://prefabs/heart_ui.tscn" id="2_jbj1t"]
-[ext_resource type="Script" uid="uid://bkgtnjlagmjq2" path="res://scripts/tim.gd" id="2_jkv2x"]
+[ext_resource type="Script" uid="uid://bkgtnjlagmjq2" path="res://scripts/character_body_3d.gd" id="2_jkv2x"]
 [ext_resource type="Script" uid="uid://cx6tfdws7bcma" path="res://scripts/dash_charge.gd" id="3_jbj1t"]
 [ext_resource type="Script" uid="uid://t017nvc351pt" path="res://scripts/level_manager.gd" id="4_gqmmt"]
 [ext_resource type="Script" uid="uid://d16fkngcaouh8" path="res://scripts/knife_follow_holder.gd" id="4_muem4"]
@@ -11,9 +11,12 @@
 [ext_resource type="Script" uid="uid://duxpse3yomto" path="res://scripts/player_damageable.gd" id="5_muem4"]
 [ext_resource type="Script" uid="uid://bwnogcs7fl3f8" path="res://scripts/knife.gd" id="6_0ld40"]
 [ext_resource type="Script" uid="uid://c3ticqx31o5xn" path="res://scripts/knife_visual_manager.gd" id="7_gqmmt"]
-[ext_resource type="Shape3D" uid="uid://cowcj52wfpss5" path="res://player_shape.tres" id="8_a8y0u"]
 [ext_resource type="Script" uid="uid://bit2ncux0jsm7" path="res://scripts/knife_hit_manager.gd" id="8_yc10j"]
 [ext_resource type="Script" uid="uid://bmij1nyxkj3wm" path="res://scripts/knife_fly_manager.gd" id="9_jscy8"]
+[ext_resource type="Script" uid="uid://burlfs2kvsdi4" path="res://scripts/bullet_spawner.gd" id="13_2wyq8"]
+[ext_resource type="PackedScene" uid="uid://5dj2aea4rncl" path="res://prefabs/enemy.tscn" id="14_muem4"]
+[ext_resource type="PackedScene" uid="uid://cbo34i1nmq84k" path="res://prefabs/bullet.tscn" id="14_vxglm"]
+[ext_resource type="PackedScene" uid="uid://crkpvuefp6c5b" path="res://prefabs/heart_pickup.tscn" id="19_0ld40"]
 
 [sub_resource type="GDScript" id="GDScript_v3a5a"]
 script/source = "extends Node3D
@@ -21,9 +24,6 @@ script/source = "extends Node3D
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	LevelObjects.Tim = %Tim
-	LevelObjects.Knife = %Knife
-	LevelObjects.LevelManager = %LevelManager
 	LevelObjects.PlayerSubtree = %PlayerSubtree
 	LevelObjects.EnemySubtree = %EnemySubtree
 	LevelObjects.BulletSubtree = %BulletSubtree
@@ -50,74 +50,9 @@ orientation = 1
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_v3a5a"]
 
-[sub_resource type="GDScript" id="GDScript_bdcc4"]
-script/source = "extends Area3D
-
-func _on_body_entered(body: Node3D) -> void:
-	if body is not Enemy:
-		print(\"non-enemy entered arena area...?\")
-	body.propagate_call(\"on_arena_enter\")
-
-func _on_body_exited(body: Node3D) -> void:
-	if body is not Enemy:
-		print(\"non-enemy exited arena area...?\")
-	body.propagate_call(\"on_arena_exit\")
-"
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_3hjku"]
-size = Vector3(20.5, 2, 20.5)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_v3a5a"]
-size = Vector3(2, 2, 30)
-
-[sub_resource type="GDScript" id="GDScript_3hjku"]
-script/source = "extends Node
-
-@onready var level_manager = %LevelManager
-
-func t_sentry(side: StringName, offset: float):
-	var spawn_pos : Vector3 = level_manager.get_point_on_side(side, offset)
-	var move_dir : StringName = Globals.dir_away(side)
-	
-	var sentry : Enemy = Prefabs.Sentry.instantiate()
-	sentry.position = spawn_pos
-	sentry.move_dir = Globals.get_vector(move_dir)
-	%EnemySubtree.add_child(sentry)
-
-const first_sentry_res = preload(\"res://prefabs/enemies/level1/first_sentry.tscn\")
-func first_sentry():
-	var spawn_pos : Vector3 = level_manager.get_point_on_side(&\"side_left\", 0.22)
-	var move_dir : StringName = &\"dir_right\"
-	
-	var sentry : Enemy = first_sentry_res.instantiate()
-	sentry.position = spawn_pos
-	sentry.move_dir = Globals.get_vector(move_dir)
-	%EnemySubtree.add_child(sentry)
-	sentry.look_at(spawn_pos + Vector3.RIGHT)
-
-func second_sentry():
-	var spawn_pos : Vector3 = level_manager.get_point_on_side(&\"side_right\", 0.85)
-	var move_dir : StringName = &\"dir_left\"
-	
-	var sentry : Enemy = first_sentry_res.instantiate()
-	sentry.position = spawn_pos
-	sentry.move_dir = Globals.get_vector(move_dir)
-	%EnemySubtree.add_child(sentry)
-	sentry.look_at(spawn_pos + Vector3.LEFT)
-
-const swoop_res = preload(\"res://prefabs/enemies/level1/l1_swoop.tscn\")
-func swoop_group(count: int):
-	var spawn_pos = Vector3(-15, 1, -15)
-	for i in range(count):
-		var swoop : Enemy = swoop_res.instantiate()
-		swoop.position = spawn_pos
-		%EnemySubtree.add_child(swoop)
-		await get_tree().create_timer(0.25).timeout
-"
-
 [sub_resource type="Animation" id="Animation_w48qg"]
-resource_name = "level1"
-length = 20.0
+resource_name = "new_animation"
+length = 4.0
 tracks/0/type = "method"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -125,53 +60,26 @@ tracks/0/path = NodePath("LevelManager")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(),
-"transitions": PackedFloat32Array(),
-"values": []
-}
-tracks/1/type = "method"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("LevelManager/TestFormations")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(1.0666667, 6.9333334, 12.566667),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0.56666666, 1.6, 2.5472953, 3.2499976),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
 "values": [{
-"args": [],
-"method": &"first_sentry"
+"args": [&"left"],
+"method": &"spawn_sentry"
 }, {
-"args": [],
-"method": &"second_sentry"
+"args": [&"side_bottom"],
+"method": &"spawn_sentry"
 }, {
-"args": [3],
-"method": &"swoop_group"
-}]
-}
-
-[sub_resource type="Animation" id="Animation_a8y0u"]
-resource_name = "test"
-length = 20.066668
-tracks/0/type = "method"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("LevelManager/TestFormations")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0.36666667),
-"transitions": PackedFloat32Array(1),
-"values": [{
-"args": [3],
-"method": &"swoop_group"
+"args": [&"side_right"],
+"method": &"spawn_sentry"
+}, {
+"args": [&"side_left"],
+"method": &"spawn_sentry"
 }]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_vivmo"]
 _data = {
-&"level1": SubResource("Animation_w48qg"),
-&"test": SubResource("Animation_a8y0u")
+&"new_animation": SubResource("Animation_w48qg")
 }
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yc10j"]
@@ -181,8 +89,10 @@ grow_amount = 0.1
 [sub_resource type="ImmediateMesh" id="ImmediateMesh_v3a5a"]
 
 [sub_resource type="Curve" id="Curve_ycdy4"]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.082397, 0.10769236), 2.3581192, 2.3581192, 0, 0, Vector2(0.32594937, 0.53459126), 1.3598148, 1.3598148, 0, 0, Vector2(1, 1), 0.21394251, 0.0, 0, 0]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.082397, 0.10769236), 2.3581192, 2.3581192, 0, 0, Vector2(0.2846442, 0.5692308), 0.9335664, 0.9335664, 0, 0, Vector2(1, 1), 0.21394251, 0.0, 0, 0]
 point_count = 4
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_v3a5a"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_v3a5a"]
 
@@ -265,72 +175,24 @@ transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545
 light_color = Color(1, 0.9098039, 0.91764706, 1)
 shadow_enabled = true
 
-[node name="Floor" type="MeshInstance3D" parent="." unique_id=1539506947]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1539506947]
 mesh = SubResource("QuadMesh_3hjku")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Floor" unique_id=1438443089]
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D" unique_id=1438443089]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor/StaticBody3D" unique_id=1055680507]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D" unique_id=1055680507]
 shape = SubResource("WorldBoundaryShape3D_v3a5a")
 
-[node name="ArenaEnemyArea" type="Area3D" parent="." unique_id=627387010]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-collision_layer = 0
-collision_mask = 4
-script = SubResource("GDScript_bdcc4")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="ArenaEnemyArea" unique_id=1775759010]
-shape = SubResource("BoxShape3D_3hjku")
-
-[node name="PlayerBoundary" type="Node3D" parent="." unique_id=1452797127]
-
-[node name="ArenaWall" type="StaticBody3D" parent="PlayerBoundary" unique_id=1535185000]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 1, 0)
-collision_layer = 64
-collision_mask = 0
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerBoundary/ArenaWall" unique_id=640311914]
-shape = SubResource("BoxShape3D_v3a5a")
-
-[node name="ArenaWall2" type="StaticBody3D" parent="PlayerBoundary" unique_id=403481251]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 1, 0)
-collision_layer = 64
-collision_mask = 0
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerBoundary/ArenaWall2" unique_id=1642428415]
-shape = SubResource("BoxShape3D_v3a5a")
-
-[node name="ArenaWall3" type="StaticBody3D" parent="PlayerBoundary" unique_id=1299717706]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 1, 11)
-collision_layer = 64
-collision_mask = 0
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerBoundary/ArenaWall3" unique_id=1781829481]
-shape = SubResource("BoxShape3D_v3a5a")
-
-[node name="ArenaWall4" type="StaticBody3D" parent="PlayerBoundary" unique_id=1359387350]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 1, -11)
-collision_layer = 64
-collision_mask = 0
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerBoundary/ArenaWall4" unique_id=2050554618]
-shape = SubResource("BoxShape3D_v3a5a")
-
-[node name="OverheadCamera" type="Camera3D" parent="." unique_id=1928166506]
-transform = Transform3D(1, 0, 0, 0, 0.29301772, 0.956107, 0, -0.956107, 0.29301772, 0, 11.81238, 5.8401175)
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1928166506]
+transform = Transform3D(1, 0, 0, 0, 0.29301772, 0.956107, 0, -0.956107, 0.29301772, 0, 17.947813, 5.937251)
 
 [node name="LevelManager" type="Node" parent="." unique_id=218049675]
-unique_name_in_owner = true
 script = ExtResource("4_gqmmt")
-
-[node name="TestFormations" type="Node" parent="LevelManager" unique_id=373923190]
-script = SubResource("GDScript_3hjku")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="LevelManager" unique_id=1835240327]
 root_node = NodePath("../..")
 libraries/ = SubResource("AnimationLibrary_vivmo")
-autoplay = &"level1"
-speed_scale = 1.5
+autoplay = &"new_animation"
 
 [node name="ArenaBoundaryMesh" type="MeshInstance3D" parent="LevelManager" unique_id=92690838]
 material_override = SubResource("StandardMaterial3D_yc10j")
@@ -343,7 +205,6 @@ unique_name_in_owner = true
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.146304, 1.0491691, 0)
 collision_layer = 2
-collision_mask = 65
 script = ExtResource("2_jkv2x")
 
 [node name="PlayerDamageable" type="Node" parent="PlayerSubtree/Tim" unique_id=1140139603]
@@ -352,17 +213,12 @@ script = ExtResource("5_muem4")
 
 [node name="States" type="Node" parent="PlayerSubtree/Tim" unique_id=1028104413]
 
-[node name="DashCharge" type="Node" parent="PlayerSubtree/Tim/States" unique_id=127680061 node_paths=PackedStringArray("shape_cast")]
+[node name="DashCharge" type="Node" parent="PlayerSubtree/Tim/States" unique_id=127680061]
 script = ExtResource("3_jbj1t")
 charge_time_dist_curve = SubResource("Curve_ycdy4")
-shape_cast = NodePath("../../DashShapeCast")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerSubtree/Tim" unique_id=495688890]
-shape = ExtResource("8_a8y0u")
-
-[node name="DashShapeCast" type="ShapeCast3D" parent="PlayerSubtree/Tim" unique_id=1228774771]
-shape = ExtResource("8_a8y0u")
-collision_mask = 65
+shape = SubResource("CapsuleShape3D_v3a5a")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="PlayerSubtree/Tim" unique_id=1917269850]
 mesh = SubResource("CapsuleMesh_v3a5a")
@@ -437,11 +293,27 @@ shape = SubResource("SphereShape3D_v3a5a")
 [node name="EnemySubtree" type="Node" parent="." unique_id=2095194599]
 unique_name_in_owner = true
 
+[node name="Enemy" parent="EnemySubtree" unique_id=1800477246 instance=ExtResource("14_muem4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.70983195, 0)
+
+[node name="BulletSpawner2" type="Node3D" parent="EnemySubtree/Enemy" unique_id=1280399251]
+script = ExtResource("13_2wyq8")
+bullet = ExtResource("14_vxglm")
+
+[node name="Marker3D" type="Marker3D" parent="EnemySubtree/Enemy/BulletSpawner2" unique_id=2002245606]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.747, 0, 0.749)
+
+[node name="Marker3D2" type="Marker3D" parent="EnemySubtree/Enemy/BulletSpawner2" unique_id=185601249]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.9145753)
+
+[node name="Marker3D3" type="Marker3D" parent="EnemySubtree/Enemy/BulletSpawner2" unique_id=1136403302]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4498038, 0, 1.0040245)
+
 [node name="BulletSubtree" type="Node" parent="." unique_id=83211510]
 unique_name_in_owner = true
 
 [node name="PickupSubtree" type="Node" parent="." unique_id=47071426]
 unique_name_in_owner = true
 
-[connection signal="body_entered" from="ArenaEnemyArea" to="ArenaEnemyArea" method="_on_body_entered"]
-[connection signal="body_exited" from="ArenaEnemyArea" to="ArenaEnemyArea" method="_on_body_exited"]
+[node name="HeartPickup" parent="PickupSubtree" unique_id=2014270448 instance=ExtResource("19_0ld40")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.7058935, 0.73596144, -5.1186485)

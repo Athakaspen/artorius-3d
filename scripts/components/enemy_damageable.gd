@@ -1,16 +1,11 @@
-extends Node
-
-@onready var parent : Enemy = get_parent()
+extends SimpleComponent
+class_name EnemyDamageable
 
 @export var max_hp : int = 100
-@export var damage_cooltime : float = 0.5 # seconds
+@export var damage_cooltime : float = 0.1 # seconds
 
 @onready var hp : int = max_hp
 var cooltime_counter : float = 0.0
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -18,16 +13,15 @@ func _process(delta: float) -> void:
 
 func on_hit(damage: int) -> bool:
 	if is_invincible():
-		print("hit invincible enemy: " + parent.to_string())
 		return false
 
 	hp -= damage
 	cooltime_counter = damage_cooltime
 	print(hp)
-	parent.propagate_call("on_damage", [damage])
+	parent.propagate_call(&"on_damage", [damage])
 	
 	if hp <= 0:
-		parent.on_dead()
+		parent.propagate_call(&"on_dead")
 	
 	return true
 

@@ -6,7 +6,7 @@ class_name Tim
 
 @export var normal_speed = 12.0
 @export var focus_speed : float = 5.0
-@export var dash_charge_speed : float = 1.1
+@export var dash_charge_speed : float = 0
 var is_focusing : bool = false
 
 func _physics_process(delta: float) -> void:
@@ -21,8 +21,8 @@ func _physics_process(delta: float) -> void:
 		velocity.x = direction.x * cur_speed
 		velocity.z = direction.z * cur_speed
 	else:
-		velocity.x = move_toward(velocity.x, 0, focus_speed)
-		velocity.z = move_toward(velocity.z, 0, focus_speed)
+		velocity.x = 0
+		velocity.z = 0
 
 	move_and_slide()
 

@@ -1,29 +1,20 @@
 extends Node3D
+class_name BulletSpawner
 
-@export var bullet : PackedScene
-@export var fire_rate : float = 3 # per second
-@onready var fire_delay : float = 1.0 / fire_rate
-@export var bullet_speed : float = 7
+@export var autostart : bool = true
+func _ready() -> void:
+	deactivate()
 
-var cooltime_counter : float = 0
+func activate():
+	self.set_process(true)
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	self.rotate(Vector3.UP, -delta * 0.2)
-	cooltime_counter -= delta
-	if cooltime_counter <= 0:
-		fire()
-		cooltime_counter += fire_delay
+func deactivate():
+	self.set_process(false)
 
-func fire():
-	for child in get_children():
-		var direction = (child.global_position - global_position).normalized()
-		var bullet = bullet.instantiate() as Bullet
-		bullet.position = global_position
-		bullet.velocity = direction * bullet_speed
-		%BulletSubtree.add_child(bullet)
+func on_arena_enter():
+	if autostart: activate()
 
-func fire_count(count: int):
-	for i in range(count):
-		fire()
-		await get_tree().create_timer(0.1).timeout
+func on_arena_exit(): 
+	deactivate()
+
+@export var bullet_res : PackedScene

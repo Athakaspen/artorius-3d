@@ -16,7 +16,7 @@ func _process(delta: float) -> void:
 	cooltime_counter -= delta
 	
 	# no hits while invincible
-	if %PlayerDamageable.is_invincible: return
+	if %PlayerDamageable.is_nohit_mode: return
 	# no hits while charging dash
 	if knife.state == Knife.DASH_CHARGE: return
 	
@@ -29,11 +29,11 @@ func _process(delta: float) -> void:
 		var overlap = hitbox.get_overlapping_bodies()
 		var hit_anything := false
 		for body in overlap:
-			if body.has_node("Damageable"):
-				var success : bool = body.get_node("Damageable").on_hit(damage)
+			if body is Enemy:
+				var success : bool = body.on_hit(damage)
 				if success: hit_anything = true
 			else:
-				print("Knife hit non-damageable body!!!")
+				print("Knife hit non-enemy body!!!" + body.to_string())
 		
 		if hit_anything:
 			cooltime_counter = hit_cooltime_focus if is_focusing else hit_cooltime_normal

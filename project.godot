@@ -19,6 +19,8 @@ config/icon="res://icon.svg"
 
 Singleton="*uid://1kjwaeqsoos8"
 Prefabs="*uid://xdcyj2vt4ely"
+Globals="*uid://lrfn2b887wsv"
+LevelObjects="*uid://bed2t5bvva1f0"
 
 [display]
 
@@ -96,6 +98,7 @@ toggle_god_mode={
 3d_physics/layer_4="Knife"
 3d_physics/layer_5="Bullets"
 3d_physics/layer_6="Pickups"
+3d_physics/layer_7="PlayerBoundary"
 
 [physics]
 

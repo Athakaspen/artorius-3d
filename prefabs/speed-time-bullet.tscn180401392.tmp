@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://cc06ab08dqwsf"]
+
+[ext_resource type="Script" uid="uid://cbu3sa0nerjrn" path="res://scripts/direction_speed_bullet.gd" id="1_6kq07"]
+[ext_resource type="Script" uid="uid://d3pv0v6ietsom" path="res://scripts/components/free_on_hit.gd" id="2_6kq07"]
+[ext_resource type="Script" uid="uid://dxb3q62byfbdc" path="res://scripts/components/speed_curve.gd" id="3_brc7a"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w48qg"]
+transparency = 1
+albedo_color = Color(0.37254903, 0.77254903, 0.6862745, 1)
+metallic = 0.59
+metallic_specular = 0.63
+roughness = 0.75
+
+[sub_resource type="SphereMesh" id="SphereMesh_bdcc4"]
+radius = 0.35
+height = 0.7
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_3hjku"]
+radius = 0.35
+
+[node name="Bullet2" type="Node3D" unique_id=737971154]
+script = ExtResource("1_6kq07")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=845247046]
+material_override = SubResource("StandardMaterial3D_w48qg")
+mesh = SubResource("SphereMesh_bdcc4")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=603529074]
+collision_layer = 16
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=370543133]
+shape = SubResource("SphereShape3D_3hjku")
+
+[node name="FreeOnHit" type="Node" parent="." unique_id=1353907425]
+script = ExtResource("2_6kq07")
+metadata/_custom_type_script = "uid://d3pv0v6ietsom"
+
+[node name="SpeedCurveComponent" type="Node" parent="." unique_id=1519160171]
+script = ExtResource("3_brc7a")
+metadata/_custom_type_script = "uid://dxb3q62byfbdc"
