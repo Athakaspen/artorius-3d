@@ -3,9 +3,10 @@ class_name SingleBulletSpawner
 
 @export var fire_rate : float = 2 # per second
 @onready var fire_delay : float = 1.0 / fire_rate
+@export var initial_delay : float = 0.6
 @export var bullet_speed : float = 8
 
-@onready var cooltime_counter : float = 0.01
+@onready var cooltime_counter : float = initial_delay
 
 func _process(delta: float) -> void:
 	cooltime_counter -= delta

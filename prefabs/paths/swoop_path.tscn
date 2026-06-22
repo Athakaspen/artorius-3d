@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://cyu72nfh8ivpv"]
+
+[sub_resource type="Curve3D" id="Curve3D_jbooi"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, -16.02914, 0, -15.95975, -1.757885, 0, -0.92520237, 1.757885, 0, 0.92520237, -7.794834, 0, -6.6448975, 0, 0, 0, 0, 0, 0, -0.02312851, 0, -5.822829, -1.6191063, 0, 0.878942, 1.6191063, 0, -0.878942, 7.471016, 0, -6.5523777, 0, 0, 0, 0, 0, 0, 15.98288, 0, -16.00601),
+"tilts": PackedFloat32Array(0, 0, 0, 0, 0)
+}
+point_count = 5
+
+[node name="SwoopPath" type="Path3D" unique_id=1393282242]
+curve = SubResource("Curve3D_jbooi")

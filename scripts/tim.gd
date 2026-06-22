@@ -5,7 +5,7 @@ class_name Tim
 @onready var player_damageable = $PlayerDamageable
 
 @export var normal_speed = 12.0
-@export var focus_speed : float = 5.0
+@export var focus_speed : float = 6.0
 @export var dash_charge_speed : float = 0
 var is_focusing : bool = false
 

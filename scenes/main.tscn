@@ -40,11 +40,11 @@ background_mode = 2
 sky = SubResource("Sky_3hjku")
 tonemap_mode = 2
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bdcc4"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dp3eg"]
 albedo_texture = ExtResource("1_a8y0u")
 
 [sub_resource type="QuadMesh" id="QuadMesh_3hjku"]
-material = SubResource("StandardMaterial3D_bdcc4")
+material = SubResource("StandardMaterial3D_dp3eg")
 size = Vector2(20, 20)
 orientation = 1
 
@@ -75,43 +75,17 @@ script/source = "extends Node
 
 @onready var level_manager = %LevelManager
 
-func t_sentry(side: StringName, offset: float):
-	var spawn_pos : Vector3 = level_manager.get_point_on_side(side, offset)
-	var move_dir : StringName = Globals.dir_away(side)
-	
-	var sentry : Enemy = Prefabs.Sentry.instantiate()
-	sentry.position = spawn_pos
-	sentry.move_dir = Globals.get_vector(move_dir)
-	%EnemySubtree.add_child(sentry)
+const swoop_threat_res = preload(\"uid://4lm10a5i4ijw\")
+func swoop(offset: Vector3 = Vector3.ZERO):
+	var enemy = swoop_threat_res.instantiate()
+	enemy.position = offset
+	%EnemySubtree.add_child(enemy)
 
-const first_sentry_res = preload(\"res://prefabs/enemies/level1/first_sentry.tscn\")
-func first_sentry():
-	var spawn_pos : Vector3 = level_manager.get_point_on_side(&\"side_left\", 0.22)
-	var move_dir : StringName = &\"dir_right\"
-	
-	var sentry : Enemy = first_sentry_res.instantiate()
-	sentry.position = spawn_pos
-	sentry.move_dir = Globals.get_vector(move_dir)
-	%EnemySubtree.add_child(sentry)
-	sentry.look_at(spawn_pos + Vector3.RIGHT)
-
-func second_sentry():
-	var spawn_pos : Vector3 = level_manager.get_point_on_side(&\"side_right\", 0.85)
-	var move_dir : StringName = &\"dir_left\"
-	
-	var sentry : Enemy = first_sentry_res.instantiate()
-	sentry.position = spawn_pos
-	sentry.move_dir = Globals.get_vector(move_dir)
-	%EnemySubtree.add_child(sentry)
-	sentry.look_at(spawn_pos + Vector3.LEFT)
-
-const swoop_res = preload(\"res://prefabs/enemies/level1/l1_swoop.tscn\")
 func swoop_group(count: int):
-	var spawn_pos = Vector3(-15, 1, -15)
+	var offset = Vector3.ZERO
 	for i in range(count):
-		var swoop : Enemy = swoop_res.instantiate()
-		swoop.position = spawn_pos
-		%EnemySubtree.add_child(swoop)
+		swoop(offset)
+		offset += Vector3.BACK * 0.8
 		await get_tree().create_timer(0.25).timeout
 "
 
@@ -152,7 +126,7 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Animation_a8y0u"]
 resource_name = "test"
-length = 20.066668
+length = 8.0
 tracks/0/type = "method"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -160,7 +134,7 @@ tracks/0/path = NodePath("LevelManager/TestFormations")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0.36666667),
+"times": PackedFloat32Array(1.5666667),
 "transitions": PackedFloat32Array(1),
 "values": [{
 "args": [3],
@@ -209,9 +183,10 @@ albedo_color = Color(0.2509804, 1, 0.25490198, 1)
 [sub_resource type="CylinderMesh" id="CylinderMesh_efxa6"]
 top_radius = 0.06
 bottom_radius = 0.3
-height = 1.0
+height = 1.2
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_v3a5a"]
+radius = 0.65
 
 [node name="Main" type="Node3D" unique_id=1037926069]
 script = SubResource("GDScript_v3a5a")
@@ -318,6 +293,7 @@ shape = SubResource("BoxShape3D_v3a5a")
 
 [node name="OverheadCamera" type="Camera3D" parent="." unique_id=1928166506]
 transform = Transform3D(1, 0, 0, 0, 0.29301772, 0.956107, 0, -0.956107, 0.29301772, 0, 11.81238, 5.8401175)
+visible = false
 
 [node name="LevelManager" type="Node" parent="." unique_id=218049675]
 unique_name_in_owner = true
@@ -329,7 +305,7 @@ script = SubResource("GDScript_3hjku")
 [node name="AnimationPlayer" type="AnimationPlayer" parent="LevelManager" unique_id=1835240327]
 root_node = NodePath("../..")
 libraries/ = SubResource("AnimationLibrary_vivmo")
-autoplay = &"level1"
+autoplay = &"test"
 speed_scale = 1.5
 
 [node name="ArenaBoundaryMesh" type="MeshInstance3D" parent="LevelManager" unique_id=92690838]

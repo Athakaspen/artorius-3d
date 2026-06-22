@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://chs5onoj478uw"]
+
+[ext_resource type="Script" uid="uid://bm08pp6e32dvu" path="res://scripts/components/hit_flash.gd" id="2_lu4v2"]
+[ext_resource type="Script" uid="uid://ca62vebyl8okn" path="res://scripts/components/enemy_damageable.gd" id="3_jnnml"]
+[ext_resource type="Script" uid="uid://dwuxnpnlm8872" path="res://scripts/components/drop_pickup.gd" id="4_2p0qf"]
+[ext_resource type="Script" uid="uid://df3aqncha7eo5" path="res://scripts/components/free_on_dead.gd" id="5_bfetj"]
+
+[node name="Enemy" type="CharacterBody3D" unique_id=1800477246]
+collision_layer = 4
+
+[node name="EnemyDamageable" type="Node" parent="." unique_id=1689036248]
+script = ExtResource("3_jnnml")
+metadata/_custom_type_script = "uid://ca62vebyl8okn"
+
+[node name="DropPickup" type="Node" parent="." unique_id=521959786]
+script = ExtResource("4_2p0qf")
+metadata/_custom_type_script = "uid://dwuxnpnlm8872"
+
+[node name="FreeOnDead" type="Node" parent="." unique_id=2028756952]
+script = ExtResource("5_bfetj")
+metadata/_custom_type_script = "uid://df3aqncha7eo5"
+
+[node name="HitFlash" type="Node" parent="." unique_id=1901981780]
+script = ExtResource("2_lu4v2")
+metadata/_custom_type_script = "uid://bm08pp6e32dvu"
