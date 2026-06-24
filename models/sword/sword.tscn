@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://6nmn1naonmxa"]
+
+[ext_resource type="PackedScene" uid="uid://dtnpho2y4khlg" path="res://models/sword/Sword_0.dae" id="1_mbaob"]
+[ext_resource type="Texture2D" uid="uid://b8kdnh580r3tj" path="res://models/sword/texture_db32.png" id="2_0fhvf"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_35jiv"]
+albedo_texture = ExtResource("2_0fhvf")
+
+[node name="Sword_0" unique_id=357500504 instance=ExtResource("1_mbaob")]
+
+[node name="Cylinder" parent="." index="0" unique_id=1023348620]
+transform = Transform3D(1, 0, 0, 0, 3.005, 0, 0, 0, 1, 0, 0, 0.345)
+material_override = SubResource("StandardMaterial3D_35jiv")

@@ -1,18 +1,25 @@
-extends Node3D
 class_name Bullet
+extends Node3D
 
-@export var collider : Area3D
-func ready():
-	if not collider.get_collision_layer_value(2):
-		print ("bullet has sus collision")
+const delete_distance_squared = 30.0 ** 2
 
-const delete_distance_squared = 30.0**2
+@export var collider: Area3D
 
-var time_alive : float = 0
+var time_alive: float = 0
+
+
+func _ready():
+	if not collider.get_collision_mask_value(2):
+		print("bullet has sus collision mask")
+	if not collider.get_collision_layer_value(5):
+		print("bullet has sus collision")
+
+
 func _process(delta: float) -> void:
 	time_alive += delta
 
-func _physics_process(delta: float) -> void:
+
+func _physics_process(_delta: float) -> void:
 	if position.length_squared() > delete_distance_squared:
 		self.queue_free()
 
@@ -23,6 +30,7 @@ func _physics_process(delta: float) -> void:
 			if body is not Tim:
 				print("Bullet hit something other than Tim???" + body.to_string())
 			else:
-				if (body as Tim).take_damage() == true: 
+				if (body as Tim).take_damage() == true:
 					hit_success = true
-		if hit_success: propagate_call("on_hit")
+		if hit_success:
+			propagate_call("on_hit")

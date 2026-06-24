@@ -1,10 +1,11 @@
 [gd_scene format=3 uid="uid://c8sn1k7ijb6v7"]
 
-[ext_resource type="Texture2D" uid="uid://bqxihnsm5takt" path="res://textures/texture_07.png" id="1_a8y0u"]
 [ext_resource type="Script" uid="uid://dwsbain2i2hs5" path="res://scripts/ui/life_bar.gd" id="1_jbj1t"]
 [ext_resource type="PackedScene" uid="uid://cgya1kocq4amq" path="res://prefabs/heart_ui.tscn" id="2_jbj1t"]
 [ext_resource type="Script" uid="uid://bkgtnjlagmjq2" path="res://scripts/tim.gd" id="2_jkv2x"]
+[ext_resource type="Material" uid="uid://dnf3oxvy8po54" path="res://materials/wave_material.tres" id="3_0ld40"]
 [ext_resource type="Script" uid="uid://cx6tfdws7bcma" path="res://scripts/dash_charge.gd" id="3_jbj1t"]
+[ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="4_dp3eg"]
 [ext_resource type="Script" uid="uid://t017nvc351pt" path="res://scripts/level_manager.gd" id="4_gqmmt"]
 [ext_resource type="Script" uid="uid://d16fkngcaouh8" path="res://scripts/knife_follow_holder.gd" id="4_muem4"]
 [ext_resource type="Script" uid="uid://cthokyic6rp4j" path="res://scripts/debug_visuals.gd" id="5_dp3eg"]
@@ -14,6 +15,12 @@
 [ext_resource type="Shape3D" uid="uid://cowcj52wfpss5" path="res://player_shape.tres" id="8_a8y0u"]
 [ext_resource type="Script" uid="uid://bit2ncux0jsm7" path="res://scripts/knife_hit_manager.gd" id="8_yc10j"]
 [ext_resource type="Script" uid="uid://bmij1nyxkj3wm" path="res://scripts/knife_fly_manager.gd" id="9_jscy8"]
+[ext_resource type="Material" uid="uid://husbjvdyujmi" path="res://materials/pixel_perfect_outline.tres" id="11_gqmmt"]
+[ext_resource type="PackedScene" uid="uid://prh35jb6tjtd" path="res://models/sophia_skin/sophia_skin.tscn" id="12_dp3eg"]
+[ext_resource type="Script" uid="uid://csjccrhj5wnx7" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="16_0ld40"]
+[ext_resource type="Shader" uid="uid://l7tua5gd8aop" path="res://materials/test.gdshader" id="16_yc10j"]
+[ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="17_gqmmt"]
+[ext_resource type="PackedScene" uid="uid://6nmn1naonmxa" path="res://models/sword/sword.tscn" id="19_0ld40"]
 
 [sub_resource type="GDScript" id="GDScript_v3a5a"]
 script/source = "extends Node3D
@@ -40,12 +47,11 @@ background_mode = 2
 sky = SubResource("Sky_3hjku")
 tonemap_mode = 2
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dp3eg"]
-albedo_texture = ExtResource("1_a8y0u")
-
 [sub_resource type="QuadMesh" id="QuadMesh_3hjku"]
-material = SubResource("StandardMaterial3D_dp3eg")
+material = ExtResource("3_0ld40")
 size = Vector2(20, 20)
+subdivide_width = 20
+subdivide_depth = 20
 orientation = 1
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_v3a5a"]
@@ -70,6 +76,10 @@ size = Vector3(20.5, 2, 20.5)
 [sub_resource type="BoxShape3D" id="BoxShape3D_v3a5a"]
 size = Vector3(2, 2, 30)
 
+[sub_resource type="Resource" id="Resource_yc10j"]
+script = ExtResource("17_gqmmt")
+duration = 0.3
+
 [sub_resource type="GDScript" id="GDScript_3hjku"]
 script/source = "extends Node
 
@@ -87,6 +97,22 @@ func swoop_group(count: int):
 		swoop(offset)
 		offset += Vector3.BACK * 0.8
 		await get_tree().create_timer(0.25).timeout
+
+
+var ring_res = preload(\"res://prefabs/summons/shrink_ring_summon.tscn\")
+func ring_summon():
+	var ring = ring_res.instantiate()
+	ring.tim = LevelObjects.Tim
+	LevelObjects.BulletSubtree.add_child(ring)
+
+var line_res = preload(\"res://prefabs/summons/line_summon.tscn\")
+func line_summon():
+	var line = line_res.instantiate()
+	line.p1 += Vector3(randf_range(-2, 2), 0, randf_range(-2, 2))
+	line.p2 += Vector3(randf_range(-2, 2), 0, randf_range(-2, 2))
+	line.num_bullets += randi_range(-5, 5)
+	line.position.y = 1
+	LevelObjects.BulletSubtree.add_child(line)
 "
 
 [sub_resource type="Animation" id="Animation_w48qg"]
@@ -126,7 +152,7 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id="Animation_a8y0u"]
 resource_name = "test"
-length = 8.0
+length = 12.3
 tracks/0/type = "method"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -134,9 +160,30 @@ tracks/0/path = NodePath("LevelManager/TestFormations")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(1.5666667),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(1.0333333, 1.7966669, 2.5666668, 3.1366668, 3.926667, 5.8, 8.966666, 9.766666),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
 "values": [{
+"args": [],
+"method": &"line_summon"
+}, {
+"args": [],
+"method": &"line_summon"
+}, {
+"args": [],
+"method": &"line_summon"
+}, {
+"args": [],
+"method": &"line_summon"
+}, {
+"args": [],
+"method": &"line_summon"
+}, {
+"args": [],
+"method": &"ring_summon"
+}, {
+"args": [],
+"method": &"ring_summon"
+}, {
 "args": [3],
 "method": &"swoop_group"
 }]
@@ -158,6 +205,45 @@ grow_amount = 0.1
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.082397, 0.10769236), 2.3581192, 2.3581192, 0, 0, Vector2(0.32594937, 0.53459126), 1.3598148, 1.3598148, 0, 0, Vector2(1, 1), 0.21394251, 0.0, 0, 0]
 point_count = 4
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_7hm8h"]
+radius = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0ld40"]
+render_priority = 1
+transparency = 1
+no_depth_test = true
+shading_mode = 0
+albedo_color = Color(0, 0, 0, 1)
+stencil_mode = 3
+stencil_flags = 1
+stencil_compare = 5
+metadata/_stencil_owned = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_muem4"]
+next_pass = SubResource("StandardMaterial3D_0ld40")
+transparency = 1
+no_depth_test = true
+shading_mode = 0
+albedo_color = Color(0.89, 0.07119998, 0.08484646, 0.39215687)
+stencil_mode = 2
+stencil_flags = 2
+
+[sub_resource type="SphereMesh" id="SphereMesh_v3a5a"]
+radius = 0.3
+height = 0.6
+
+[sub_resource type="GDScript" id="GDScript_f8h0b"]
+script/source = "extends MeshInstance3D
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	var sphere_mesh = mesh as SphereMesh
+	var shape = $\"../CollisionShape3D\".shape as SphereShape3D
+	var radius = shape.radius + 0.01
+	sphere_mesh.radius = radius
+	sphere_mesh.height = radius*2
+"
+
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_v3a5a"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1bvp3"]
@@ -174,7 +260,19 @@ inner_radius = 0.4
 outer_radius = 0.15
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dg77c"]
-albedo_color = Color(0.2509804, 1, 0.25490198, 1)
+transparency = 1
+albedo_color = Color(1, 1, 1, 0)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jscy8"]
+render_priority = 0
+shader = ExtResource("16_yc10j")
+shader_parameter/ring_color = Color(0.16258225, 0.69662744, 0.90381616, 1)
+shader_parameter/ring_radius = 0.14000000665
+shader_parameter/ring_thickness = 0.0410000019475
+shader_parameter/vertical_lines_speed = -15.0
+shader_parameter/vertical_lines_density = 15.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_v3a5a"]
 
 [sub_resource type="ImmediateMesh" id="ImmediateMesh_f8h0b"]
 
@@ -183,10 +281,10 @@ albedo_color = Color(0.2509804, 1, 0.25490198, 1)
 [sub_resource type="CylinderMesh" id="CylinderMesh_efxa6"]
 top_radius = 0.06
 bottom_radius = 0.3
-height = 1.2
+height = 1.4
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_v3a5a"]
-radius = 0.65
+radius = 0.75
 
 [node name="Main" type="Node3D" unique_id=1037926069]
 script = SubResource("GDScript_v3a5a")
@@ -291,9 +389,51 @@ collision_mask = 0
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerBoundary/ArenaWall4" unique_id=2050554618]
 shape = SubResource("BoxShape3D_v3a5a")
 
-[node name="OverheadCamera" type="Camera3D" parent="." unique_id=1928166506]
-transform = Transform3D(1, 0, 0, 0, 0.29301772, 0.956107, 0, -0.956107, 0.29301772, 0, 11.81238, 5.8401175)
-visible = false
+[node name="OverheadPCam" type="Node3D" parent="." unique_id=77543087]
+transform = Transform3D(1, 0, 0, 0, 0.17576186, 0.9844327, 0, -0.9844327, 0.17576186, 0, 13.834717, 3.5347252)
+script = ExtResource("16_0ld40")
+tween_resource = SubResource("Resource_yc10j")
+metadata/_custom_type_script = "uid://csjccrhj5wnx7"
+
+[node name="ThirdPersonCam" type="Node3D" parent="." unique_id=270933732 node_paths=PackedStringArray("follow_target")]
+transform = Transform3D(1, 0, 0, 0, 0.25881907, 0.9659258, 0, -0.9659258, 0.25881907, -7.146304, 7.7765756, 2.0705526)
+top_level = true
+script = ExtResource("16_0ld40")
+priority = 1
+follow_mode = 5
+follow_target = NodePath("../PlayerSubtree/Tim/SophiaSkin")
+tween_resource = SubResource("Resource_yc10j")
+follow_distance = 8.0
+vertical_rotation_offset = 0.9564404300928928
+spring_length = 8.0
+align_transform_with_view = Callable()
+align_position_with_view = Callable()
+metadata/_custom_type_script = "uid://csjccrhj5wnx7"
+
+[node name="ThirdPersonCam2" type="Node3D" parent="." unique_id=2038637449 node_paths=PackedStringArray("follow_targets")]
+transform = Transform3D(1, 0, 0, 0, 0.25881907, 0.9659258, 0, -0.9659258, 0.25881907, -6.308492, 9.70088, 2.4811485)
+top_level = true
+script = ExtResource("16_0ld40")
+follow_mode = 3
+follow_targets = [NodePath("../PlayerSubtree/Tim"), NodePath("../PlayerSubtree/Tim/DebugVisuals/DashMarker")]
+tween_resource = SubResource("Resource_yc10j")
+follow_distance = 9.5
+vertical_rotation_offset = 0.9564404300928928
+spring_length = 9.5
+align_transform_with_view = Callable()
+align_position_with_view = Callable()
+metadata/_custom_type_script = "uid://csjccrhj5wnx7"
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1928166506]
+physics_interpolation_mode = 1
+transform = Transform3D(1, 0, 0, 0, 0.25881907, 0.9659258, 0, -0.9659258, 0.25881907, -7.146304, 7.7765756, 2.0705526)
+top_level = true
+
+[node name="PhantomCameraHost" type="Node" parent="Camera3D" unique_id=231316606]
+process_priority = 300
+process_physics_priority = 300
+script = ExtResource("4_dp3eg")
+metadata/_custom_type_script = "uid://bd046eokvcnu2"
 
 [node name="LevelManager" type="Node" parent="." unique_id=218049675]
 unique_name_in_owner = true
@@ -306,7 +446,6 @@ script = SubResource("GDScript_3hjku")
 root_node = NodePath("../..")
 libraries/ = SubResource("AnimationLibrary_vivmo")
 autoplay = &"test"
-speed_scale = 1.5
 
 [node name="ArenaBoundaryMesh" type="MeshInstance3D" parent="LevelManager" unique_id=92690838]
 material_override = SubResource("StandardMaterial3D_yc10j")
@@ -334,13 +473,23 @@ charge_time_dist_curve = SubResource("Curve_ycdy4")
 shape_cast = NodePath("../../DashShapeCast")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerSubtree/Tim" unique_id=495688890]
-shape = ExtResource("8_a8y0u")
+shape = SubResource("SphereShape3D_7hm8h")
+
+[node name="HitboxMesh" type="MeshInstance3D" parent="PlayerSubtree/Tim" unique_id=197784011]
+material_override = SubResource("StandardMaterial3D_muem4")
+material_overlay = ExtResource("11_gqmmt")
+mesh = SubResource("SphereMesh_v3a5a")
+script = SubResource("GDScript_f8h0b")
 
 [node name="DashShapeCast" type="ShapeCast3D" parent="PlayerSubtree/Tim" unique_id=1228774771]
 shape = ExtResource("8_a8y0u")
 collision_mask = 65
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="PlayerSubtree/Tim" unique_id=1917269850]
+[node name="SophiaSkin" parent="PlayerSubtree/Tim" unique_id=1044800334 instance=ExtResource("12_dp3eg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="CapsuleMesh" type="MeshInstance3D" parent="PlayerSubtree/Tim" unique_id=1917269850]
+visible = false
 mesh = SubResource("CapsuleMesh_v3a5a")
 surface_material_override/0 = SubResource("StandardMaterial3D_1bvp3")
 
@@ -351,13 +500,15 @@ script = ExtResource("4_muem4")
 transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.2, 1.8, 0, 0)
 
 [node name="DebugKnifePoint" type="MeshInstance3D" parent="PlayerSubtree/Tim/KnifeFollowHolder/KnifeFollowPoint" unique_id=389476556]
+visible = false
 material_override = SubResource("StandardMaterial3D_f8h0b")
 mesh = SubResource("SphereMesh_3hjku")
 
 [node name="DebugVisuals" type="Node" parent="PlayerSubtree/Tim" unique_id=907704069 node_paths=PackedStringArray("dash_charge", "tim_mesh", "knife_mesh")]
+process_mode = 4
 script = ExtResource("5_dp3eg")
 dash_charge = NodePath("../States/DashCharge")
-tim_mesh = NodePath("../MeshInstance3D")
+tim_mesh = NodePath("../CapsuleMesh")
 knife_mesh = NodePath("../../Knife/MeshHolder/MeshInstance3D")
 
 [node name="MouseMarker" type="MeshInstance3D" parent="PlayerSubtree/Tim/DebugVisuals" unique_id=1008251832]
@@ -367,11 +518,15 @@ visible = false
 mesh = SubResource("TorusMesh_dg77c")
 
 [node name="DashMarker" type="MeshInstance3D" parent="PlayerSubtree/Tim/DebugVisuals" unique_id=271881641]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.47068, 0, 0.044734478)
 top_level = true
-visible = false
 material_override = SubResource("StandardMaterial3D_dg77c")
 mesh = SubResource("TorusMesh_dg77c")
+
+[node name="Effect" type="MeshInstance3D" parent="PlayerSubtree/Tim/DebugVisuals/DashMarker" unique_id=1075999092]
+transform = Transform3D(0.97, 0, 0, 0, 0.97, 0, 0, 0, 0.97, 0, 0.120449185, 0)
+material_override = SubResource("ShaderMaterial_jscy8")
+mesh = SubResource("PlaneMesh_v3a5a")
 
 [node name="FlyMarker" type="MeshInstance3D" parent="PlayerSubtree/Tim/DebugVisuals" unique_id=1886788349]
 top_level = true
@@ -400,8 +555,12 @@ transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0,
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="PlayerSubtree/Knife/MeshHolder" unique_id=198630414]
 transform = Transform3D(0.4, 0, 0, 0, -4.371139e-08, 1.52, 0, -1, -6.644131e-08, 0, 0, 0)
+visible = false
 material_override = SubResource("StandardMaterial3D_5vw27")
 mesh = SubResource("CylinderMesh_efxa6")
+
+[node name="Sword_0" parent="PlayerSubtree/Knife/MeshHolder" unique_id=357500504 instance=ExtResource("19_0ld40")]
+transform = Transform3D(2.025, 0, 0, 0, 2.025, 0, 0, 0, 2.025, 0, 0, 0)
 
 [node name="HitBox" type="Area3D" parent="PlayerSubtree/Knife" unique_id=2012923324]
 collision_layer = 8

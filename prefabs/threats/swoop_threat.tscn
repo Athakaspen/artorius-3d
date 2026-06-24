@@ -4,8 +4,9 @@
 [ext_resource type="PackedScene" uid="uid://cyu72nfh8ivpv" path="res://prefabs/paths/swoop_path.tscn" id="1_kgvy5"]
 [ext_resource type="Script" uid="uid://6rydtgfrb0n2" path="res://scripts/path_follow_enemy.gd" id="2_kgvy5"]
 [ext_resource type="PackedScene" uid="uid://chs5onoj478uw" path="res://prefabs/enemies/base_enemy.tscn" id="2_rpcuy"]
-[ext_resource type="Script" uid="uid://dlcy0giqjc734" path="res://scripts/ring_bullet_spawner.gd" id="3_00s7n"]
 [ext_resource type="PackedScene" uid="uid://cbo34i1nmq84k" path="res://prefabs/bullets/simple_bullet.tscn" id="4_v6sya"]
+[ext_resource type="Script" uid="uid://nujnf0phlvu1" path="res://scripts/single_bullet_spawner.gd" id="5_gyku2"]
+[ext_resource type="Script" uid="uid://b0tgts2hctv6g" path="res://scripts/components/look_at_player.gd" id="7_cd0qk"]
 
 [sub_resource type="Curve" id="Curve_dp3eg"]
 
@@ -34,9 +35,13 @@ mesh = SubResource("CylinderMesh_bdcc4")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Enemy" unique_id=985361794]
 shape = SubResource("SphereShape3D_3hjku")
 
-[node name="RingBulletSpawner" type="Node3D" parent="Enemy" unique_id=1983724361]
-script = ExtResource("3_00s7n")
+[node name="SingleBulletSpawner" type="Node3D" parent="Enemy" unique_id=1662621069]
+script = ExtResource("5_gyku2")
 bullet_res = ExtResource("4_v6sya")
-metadata/_custom_type_script = "uid://dlcy0giqjc734"
+metadata/_custom_type_script = "uid://nujnf0phlvu1"
+
+[node name="LookAtPlayer" type="Node" parent="Enemy/SingleBulletSpawner" unique_id=826823515]
+script = ExtResource("7_cd0qk")
+metadata/_custom_type_script = "uid://b0tgts2hctv6g"
 
 [editable path="Enemy"]

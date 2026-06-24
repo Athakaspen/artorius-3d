@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://ckp7vwtptlsvj"]
+
+[ext_resource type="Script" uid="uid://bsckxtvppiaru" path="res://prefabs/summons/line_summon.gd" id="1_ivj5b"]
+[ext_resource type="PackedScene" uid="uid://cbo34i1nmq84k" path="res://prefabs/bullets/simple_bullet.tscn" id="2_shfai"]
+
+[node name="LineSummon" type="Node3D" unique_id=1553806535]
+script = ExtResource("1_ivj5b")
+bullet_res = ExtResource("2_shfai")
+num_bullets = 14
+
+[node name="p1" type="Marker3D" parent="." unique_id=1706863714]
+
+[node name="p2" type="Marker3D" parent="." unique_id=1331966245]

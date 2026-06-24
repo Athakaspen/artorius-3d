@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://bogr2imqmm4pp"]
+
+[ext_resource type="Script" uid="uid://dad83xgksjhmc" path="res://scripts/delayed_start_bullet.gd" id="1_tqvf7"]
+[ext_resource type="Material" uid="uid://c3hqcw67pm2bk" path="res://materials/energy_bullet.tres" id="2_6ex2k"]
+[ext_resource type="Script" uid="uid://d3pv0v6ietsom" path="res://scripts/components/free_on_hit.gd" id="2_tqvf7"]
+[ext_resource type="Material" uid="uid://db4peyqaaqits" path="res://materials/bullet_outline.tres" id="3_4ei0v"]
+[ext_resource type="Script" uid="uid://dxb3q62byfbdc" path="res://scripts/components/speed_curve.gd" id="3_tqvf7"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_bdcc4"]
+radius = 0.35
+height = 0.7
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_3hjku"]
+radius = 0.35
+
+[sub_resource type="Curve" id="Curve_tqvf7"]
+
+[node name="Bullet" type="Node3D" unique_id=2025275252 node_paths=PackedStringArray("collider")]
+script = ExtResource("1_tqvf7")
+collider = NodePath("Area3D")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=15845521]
+material_override = ExtResource("2_6ex2k")
+material_overlay = ExtResource("3_4ei0v")
+instance_shader_parameters/Color = Color(0.66102004, 0.69, 0.11040002, 1)
+mesh = SubResource("SphereMesh_bdcc4")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=201416206]
+collision_layer = 16
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=754683677]
+shape = SubResource("SphereShape3D_3hjku")
+
+[node name="FreeOnHit" type="Node" parent="." unique_id=1321167029]
+script = ExtResource("2_tqvf7")
+metadata/_custom_type_script = "uid://d3pv0v6ietsom"
+
+[node name="SpeedCurveComponent" type="Node" parent="." unique_id=2037224201]
+script = ExtResource("3_tqvf7")
+slow_speed = 0.0
+change_duration = 0.6
+curve = SubResource("Curve_tqvf7")
+metadata/_custom_type_script = "uid://dxb3q62byfbdc"

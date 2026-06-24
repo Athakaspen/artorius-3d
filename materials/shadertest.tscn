@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://b0nqg5mw1tu6q"]
+
+[ext_resource type="Shader" uid="uid://b7kivcyfql1ml" path="res://telegraph_marker.gdshader" id="1_ewn37"]
+[ext_resource type="Shader" uid="uid://l7tua5gd8aop" path="res://materials/test.gdshader" id="2_854ij"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_khduo"]
+render_priority = 0
+shader = ExtResource("1_ewn37")
+shader_parameter/position = Vector3(-1.545, 0.625, 0)
+shader_parameter/radius = 0.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_v3a5a"]
+size = Vector2(20, 20)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3hjku"]
+render_priority = 0
+shader = ExtResource("2_854ij")
+shader_parameter/ring_color = Color(0.16258225, 0.69662744, 0.90381616, 1)
+shader_parameter/ring_radius = 0.4
+shader_parameter/ring_thickness = 0.05
+shader_parameter/vertical_lines_speed = 1.5
+shader_parameter/vertical_lines_density = 20.0
+shader_parameter/glow_intensity = 3.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_v3a5a"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_3hjku"]
+
+[node name="Node3D" type="Node3D" unique_id=1776325776]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1950136087]
+visible = false
+material_override = SubResource("ShaderMaterial_khduo")
+mesh = SubResource("PlaneMesh_v3a5a")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="." unique_id=2113572126]
+mesh = SubResource("PlaneMesh_v3a5a")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=1596722661]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.18149352, 0)
+visible = false
+material_override = SubResource("ShaderMaterial_3hjku")
+mesh = SubResource("CylinderMesh_v3a5a")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="." unique_id=282865115]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01644373, 0)
+material_override = SubResource("ShaderMaterial_3hjku")
+mesh = SubResource("PlaneMesh_3hjku")

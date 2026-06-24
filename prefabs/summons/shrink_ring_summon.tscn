@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://r1jj5keip0a"]
+
+[ext_resource type="Script" uid="uid://ct6cily8f4gvk" path="res://prefabs/summons/shrink_ring_summon.gd" id="1_v7y4n"]
+[ext_resource type="PackedScene" uid="uid://da62l6crkjy87" path="res://prefabs/bullets/shrink_ring_bullet.tscn" id="2_d35nu"]
+
+[node name="ShrinkRingSummon" type="Node3D" unique_id=271702068]
+script = ExtResource("1_v7y4n")
+follow_time = 1.0
+bullet_res = ExtResource("2_d35nu")
+radius = 2.0
+num_bullets = 15

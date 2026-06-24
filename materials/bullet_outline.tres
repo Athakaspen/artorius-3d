@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://db4peyqaaqits"]
+
+[ext_resource type="Shader" uid="uid://pj8vrs5v0aue" path="res://materials/shaders/pixel_perfect_outline_copy.gdshader" id="1_atnca"]
+
+[resource]
+render_priority = -1
+shader = ExtResource("1_atnca")
+shader_parameter/outline_color = Color(1, 1, 1, 1)
+shader_parameter/outline_width = 2.0
+shader_parameter/fresnel_clip_threshold = 0.5

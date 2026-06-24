@@ -1,9 +1,10 @@
 [gd_resource type="ShaderMaterial" format=3 uid="uid://husbjvdyujmi"]
 
-[ext_resource type="Shader" uid="uid://cufmdk4to4hig" path="res://materials/shaders/pixel_perfect_outline.gdshader" id="1_nmjmg"]
+[ext_resource type="Shader" uid="uid://dhc4qamd8dxkl" path="res://materials/shaders/pixel_perfect_outline_nodepth.gdshader" id="1_nmjmg"]
 
 [resource]
-render_priority = 0
+render_priority = 1
 shader = ExtResource("1_nmjmg")
 shader_parameter/outline_color = Color(1, 0, 0, 1)
-shader_parameter/outline_width = 6.0
+shader_parameter/outline_width = 2.0
+shader_parameter/fresnel_clip_threshold = 0.5
