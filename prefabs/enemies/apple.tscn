@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://jgco0xm27m1j"]
+
+[ext_resource type="PackedScene" uid="uid://chs5onoj478uw" path="res://prefabs/enemies/base_enemy.tscn" id="1_wsnfu"]
+[ext_resource type="PackedScene" uid="uid://dqwf8pyc7x4yy" path="res://models/food/apple.fbx" id="2_s37la"]
+[ext_resource type="Script" uid="uid://ddju5slsm75t6" path="res://scripts/components/rotate_component.gd" id="3_vqosh"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_v3a5a"]
+
+[node name="Enemy" unique_id=1800477246 instance=ExtResource("1_wsnfu")]
+
+[node name="HitFlash" parent="." index="3" unique_id=1901981780 node_paths=PackedStringArray("visual")]
+visual = NodePath("../apple")
+
+[node name="apple" parent="." index="4" unique_id=285534332 instance=ExtResource("2_s37la")]
+transform = Transform3D(4.835, 0, 0, 0, 4.835, 0, 0, 0, 4.835, 0, -0.4350356, 0)
+
+[node name="RotateComponent" type="Node" parent="apple" index="1" unique_id=1678816209]
+script = ExtResource("3_vqosh")
+rotate_speed = 3.5
+randomize_start = true
+metadata/_custom_type_script = "uid://ddju5slsm75t6"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." index="5" unique_id=1815924020]
+shape = SubResource("SphereShape3D_v3a5a")

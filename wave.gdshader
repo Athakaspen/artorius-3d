@@ -44,4 +44,6 @@ void fragment() {
 	
 	vec4 texture_color = texture(display_texture, UV);
 	ALBEDO = texture_color.rgb;
+	ALPHA = texture_color.a;
+	ALPHA_SCISSOR_THRESHOLD = 0.5; 
 }

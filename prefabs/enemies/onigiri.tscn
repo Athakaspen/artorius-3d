@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://cong84i1wfuoc"]
+
+[ext_resource type="PackedScene" uid="uid://chs5onoj478uw" path="res://prefabs/enemies/base_enemy.tscn" id="1_ki7cq"]
+[ext_resource type="PackedScene" uid="uid://dsoh67mrexkyw" path="res://models/food/rice-ball.fbx" id="2_ki7cq"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_xdchp"]
+
+[node name="Onigiri" unique_id=1800477246 instance=ExtResource("1_ki7cq")]
+
+[node name="HitFlash" parent="." index="3" unique_id=1901981780 node_paths=PackedStringArray("visual")]
+visual = NodePath("../rice-ball")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." index="4" unique_id=1815924020]
+shape = SubResource("SphereShape3D_xdchp")
+
+[node name="rice-ball" parent="." index="5" unique_id=1335825164 instance=ExtResource("2_ki7cq")]
+transform = Transform3D(6.505, 0, 0, 0, 6.505, 0, 0, 0, 6.505, 0, -0.365, 0)

@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://crkpvuefp6c5b"]
 
 [ext_resource type="Script" uid="uid://cyfkbb3d2amm7" path="res://scripts/heart_pickup.gd" id="1_8406d"]
+[ext_resource type="PackedScene" uid="uid://bochkh65wo7my" path="res://prefabs/heart_2.tscn" id="2_q1sk2"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3hjku"]
 transparency = 1
@@ -10,14 +11,19 @@ albedo_color = Color(1, 0.101960786, 0.11372549, 1)
 size = Vector3(1, 1, 0.5)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_3hjku"]
+radius = 0.7
 
 [node name="HeartPickup" type="Node3D" unique_id=2014270448]
 script = ExtResource("1_8406d")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=261331890]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0.095867395)
+visible = false
 material_override = SubResource("StandardMaterial3D_3hjku")
 mesh = SubResource("PrismMesh_v3a5a")
+
+[node name="heart2" parent="." unique_id=2000035365 instance=ExtResource("2_q1sk2")]
+transform = Transform3D(-2.9723743e-08, 0, -0.68, 0, 0.68, 0, 0.68, 0, -2.9723743e-08, -0.051080465, 0, 0)
 
 [node name="Area3D" type="Area3D" parent="." unique_id=1268794399]
 collision_layer = 32

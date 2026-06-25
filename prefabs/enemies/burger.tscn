@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://c1u2bph5ttkf7"]
+
+[ext_resource type="PackedScene" uid="uid://chs5onoj478uw" path="res://prefabs/enemies/base_enemy.tscn" id="1_mydun"]
+[ext_resource type="PackedScene" uid="uid://bcl072tsk31af" path="res://models/food/burger.fbx" id="2_mydun"]
+[ext_resource type="Script" uid="uid://ddju5slsm75t6" path="res://scripts/components/rotate_component.gd" id="3_gkjlm"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_v3a5a"]
+radius = 0.7
+
+[node name="Burger" unique_id=1800477246 instance=ExtResource("1_mydun")]
+
+[node name="burger" parent="." index="4" unique_id=753279264 instance=ExtResource("2_mydun")]
+transform = Transform3D(3.3, 0, 0, 0, 3.3, 0, 0, 0, 3.3, 0, -0.425, 0)
+
+[node name="RotateComponent" type="Node" parent="burger" index="1" unique_id=1678816209]
+script = ExtResource("3_gkjlm")
+rotate_speed = 3.5
+randomize_start = true
+metadata/_custom_type_script = "uid://ddju5slsm75t6"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." index="5" unique_id=1815924020]
+shape = SubResource("SphereShape3D_v3a5a")

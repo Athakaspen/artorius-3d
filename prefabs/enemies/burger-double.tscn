@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://q5qfydjpattn"]
+
+[ext_resource type="PackedScene" uid="uid://chs5onoj478uw" path="res://prefabs/enemies/base_enemy.tscn" id="1_3tqlu"]
+[ext_resource type="PackedScene" uid="uid://kl0rpilei5ap" path="res://models/food/burger-double.fbx" id="3_3tqlu"]
+[ext_resource type="Script" uid="uid://ddju5slsm75t6" path="res://scripts/components/rotate_component.gd" id="3_wfftv"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_v3a5a"]
+radius = 0.71
+
+[node name="BurgerDouble" unique_id=1800477246 instance=ExtResource("1_3tqlu")]
+
+[node name="HitFlash" parent="." index="3" unique_id=1901981780 node_paths=PackedStringArray("visual")]
+visual = NodePath("../burger-double")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." index="4" unique_id=1815924020]
+shape = SubResource("SphereShape3D_v3a5a")
+
+[node name="burger-double" parent="." index="5" unique_id=1339239634 instance=ExtResource("3_3tqlu")]
+transform = Transform3D(3.3, 0, 0, 0, 3.3, 0, 0, 0, 3.3, 0, -0.5422176, 0)
+
+[node name="RotateComponent" type="Node" parent="burger-double" index="1" unique_id=1678816209]
+script = ExtResource("3_wfftv")
+rotate_speed = 3.5
+randomize_start = true
+metadata/_custom_type_script = "uid://ddju5slsm75t6"

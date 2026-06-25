@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://d4ngskxcy7axy"]
+
+[ext_resource type="PackedScene" uid="uid://chs5onoj478uw" path="res://prefabs/enemies/base_enemy.tscn" id="1_eqiq5"]
+[ext_resource type="PackedScene" uid="uid://bamst4vhjsy6n" path="res://models/food/fries.fbx" id="2_qeprr"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_xdchp"]
+
+[node name="Fries" unique_id=1800477246 instance=ExtResource("1_eqiq5")]
+
+[node name="HitFlash" parent="." index="3" unique_id=1901981780 node_paths=PackedStringArray("visual")]
+visual = NodePath("../fries")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." index="4" unique_id=1815924020]
+shape = SubResource("SphereShape3D_xdchp")
+
+[node name="fries" parent="." index="5" unique_id=403840685 instance=ExtResource("2_qeprr")]
+transform = Transform3D(2.97, 0, 0, 0, 2.97, 0, 0, 0, 2.97, 0, -0.365, 0)

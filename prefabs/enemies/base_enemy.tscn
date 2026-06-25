@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://ca62vebyl8okn" path="res://scripts/components/enemy_damageable.gd" id="3_jnnml"]
 [ext_resource type="Script" uid="uid://dwuxnpnlm8872" path="res://scripts/components/drop_pickup.gd" id="4_2p0qf"]
 [ext_resource type="Script" uid="uid://df3aqncha7eo5" path="res://scripts/components/free_on_dead.gd" id="5_bfetj"]
+[ext_resource type="Material" uid="uid://drat2fbqnc2sh" path="res://materials/hitflash.tres" id="5_q3naf"]
 
 [node name="Enemy" type="CharacterBody3D" unique_id=1800477246]
 collision_layer = 4
@@ -22,4 +23,5 @@ metadata/_custom_type_script = "uid://df3aqncha7eo5"
 
 [node name="HitFlash" type="Node" parent="." unique_id=1901981780]
 script = ExtResource("2_lu4v2")
+material = ExtResource("5_q3naf")
 metadata/_custom_type_script = "uid://bm08pp6e32dvu"

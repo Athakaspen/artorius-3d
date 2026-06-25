@@ -62,14 +62,14 @@ func on_dash_pressed():
 	charge_time = 0
 	aim_with_mouse = false
 	dash_target_point = tim.global_position
-	$"../../../../ThirdPersonCam2".priority = 2
+	LevelObjects.CameraManager.dash_pcam.priority = 2
 
 
 func on_dash_released():
 	if !active:
 		print("Finish dash while not dashing!")
 		return
-	$"../../../../ThirdPersonCam2".priority = 0
+	LevelObjects.CameraManager.dash_pcam.priority = 0
 
 	tim.translate(dash_target_point - tim.position)
 	active = false

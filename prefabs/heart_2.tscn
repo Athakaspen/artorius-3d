@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://bochkh65wo7my"]
+
+[ext_resource type="PackedScene" uid="uid://ct73go8cc1k0k" path="res://models/heart2.fbx" id="1_pc7je"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q1sk2"]
+albedo_color = Color(0.97, 0.11640001, 0.20175995, 1)
+
+[node name="heart2" unique_id=2000035365 instance=ExtResource("1_pc7je")]
+
+[node name="Circle" parent="." index="0" unique_id=1819095081]
+material_override = SubResource("StandardMaterial3D_q1sk2")

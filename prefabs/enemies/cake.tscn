@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://bc2m0t0sacdy3"]
+
+[ext_resource type="PackedScene" uid="uid://chs5onoj478uw" path="res://prefabs/enemies/base_enemy.tscn" id="1_eaobu"]
+[ext_resource type="PackedScene" uid="uid://1jwyqav3veit" path="res://models/food/cake.fbx" id="2_eaobu"]
+[ext_resource type="Script" uid="uid://ddju5slsm75t6" path="res://scripts/components/rotate_component.gd" id="3_0bt6e"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ybc6p"]
+height = 0.8
+radius = 1.0
+
+[node name="BurgerDouble" unique_id=1800477246 instance=ExtResource("1_eaobu")]
+
+[node name="HitFlash" parent="." index="3" unique_id=1901981780 node_paths=PackedStringArray("visual")]
+visual = NodePath("")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." index="4" unique_id=1815924020]
+shape = SubResource("CylinderShape3D_ybc6p")
+
+[node name="cake" parent="." index="5" unique_id=1092062799 instance=ExtResource("2_eaobu")]
+transform = Transform3D(3.05, 0, 0, 0, 3.05, 0, 0, 0, 3.05, 0, -0.375, 0)
+
+[node name="RotateComponent" type="Node" parent="cake" index="1" unique_id=1140659074]
+script = ExtResource("3_0bt6e")
+rotate_speed = -2.0
+metadata/_custom_type_script = "uid://ddju5slsm75t6"

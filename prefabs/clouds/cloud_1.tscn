@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://bxbqdrq5m8s7e"]
+
+[ext_resource type="Texture2D" uid="uid://cy1lhbg3kq3od" path="res://textures/cloud_PNG19.png" id="1_i72fv"]
+[ext_resource type="Script" uid="uid://kb4css4q5djg" path="res://scripts/cloud.gd" id="2_xxt1m"]
+
+[node name="Cloud1" type="Sprite3D" unique_id=620126459]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+texture = ExtResource("1_i72fv")
+script = ExtResource("2_xxt1m")

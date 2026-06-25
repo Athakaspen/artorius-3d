@@ -8,15 +8,20 @@
 [ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="4_dp3eg"]
 [ext_resource type="Script" uid="uid://t017nvc351pt" path="res://scripts/level_manager.gd" id="4_gqmmt"]
 [ext_resource type="Script" uid="uid://d16fkngcaouh8" path="res://scripts/knife_follow_holder.gd" id="4_muem4"]
+[ext_resource type="PackedScene" uid="uid://bxbqdrq5m8s7e" path="res://prefabs/clouds/cloud_1.tscn" id="4_y6deb"]
+[ext_resource type="PackedScene" uid="uid://bbq8ejyht1ux8" path="res://prefabs/clouds/cloud_2.tscn" id="5_2wyq8"]
 [ext_resource type="Script" uid="uid://cthokyic6rp4j" path="res://scripts/debug_visuals.gd" id="5_dp3eg"]
 [ext_resource type="Script" uid="uid://duxpse3yomto" path="res://scripts/player_damageable.gd" id="5_muem4"]
 [ext_resource type="Script" uid="uid://bwnogcs7fl3f8" path="res://scripts/knife.gd" id="6_0ld40"]
+[ext_resource type="PackedScene" uid="uid://c00ncr7y0cisl" path="res://prefabs/clouds/cloud_3.tscn" id="6_vxglm"]
 [ext_resource type="Script" uid="uid://c3ticqx31o5xn" path="res://scripts/knife_visual_manager.gd" id="7_gqmmt"]
+[ext_resource type="Script" uid="uid://bdr1rykkfwm7e" path="res://scripts/camera_manager.gd" id="7_jscy8"]
 [ext_resource type="Shape3D" uid="uid://cowcj52wfpss5" path="res://player_shape.tres" id="8_a8y0u"]
 [ext_resource type="Script" uid="uid://bit2ncux0jsm7" path="res://scripts/knife_hit_manager.gd" id="8_yc10j"]
 [ext_resource type="Script" uid="uid://bmij1nyxkj3wm" path="res://scripts/knife_fly_manager.gd" id="9_jscy8"]
 [ext_resource type="Material" uid="uid://husbjvdyujmi" path="res://materials/pixel_perfect_outline.tres" id="11_gqmmt"]
 [ext_resource type="PackedScene" uid="uid://prh35jb6tjtd" path="res://models/sophia_skin/sophia_skin.tscn" id="12_dp3eg"]
+[ext_resource type="Material" uid="uid://drat2fbqnc2sh" path="res://materials/hitflash.tres" id="15_pm3ni"]
 [ext_resource type="Script" uid="uid://csjccrhj5wnx7" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="16_0ld40"]
 [ext_resource type="Shader" uid="uid://l7tua5gd8aop" path="res://materials/test.gdshader" id="16_yc10j"]
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="17_gqmmt"]
@@ -31,6 +36,7 @@ func _ready() -> void:
 	LevelObjects.Tim = %Tim
 	LevelObjects.Knife = %Knife
 	LevelObjects.LevelManager = %LevelManager
+	LevelObjects.CameraManager = $CameraManager
 	LevelObjects.PlayerSubtree = %PlayerSubtree
 	LevelObjects.EnemySubtree = %EnemySubtree
 	LevelObjects.BulletSubtree = %BulletSubtree
@@ -38,6 +44,7 @@ func _ready() -> void:
 "
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ig7tw"]
+ground_bottom_color = Color(0.43, 0.69516665, 0.86, 1)
 
 [sub_resource type="Sky" id="Sky_3hjku"]
 sky_material = SubResource("ProceduralSkyMaterial_ig7tw")
@@ -50,11 +57,41 @@ tonemap_mode = 2
 [sub_resource type="QuadMesh" id="QuadMesh_3hjku"]
 material = ExtResource("3_0ld40")
 size = Vector2(20, 20)
-subdivide_width = 20
-subdivide_depth = 20
+subdivide_width = 16
+subdivide_depth = 16
 orientation = 1
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_v3a5a"]
+
+[sub_resource type="GDScript" id="GDScript_h3avq"]
+script/source = "extends Node3D
+
+@export var clouds : Array[PackedScene]
+@export var spawn_rate : float = 1.1 # per sec
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	for i in range(18, -30, -3):
+		spawn_cloud(i)
+
+
+var timer : float = 0
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	timer -= delta
+	if timer < 0:
+		timer = spawn_rate
+		spawn_cloud(-28)
+
+func spawn_cloud(z: float):
+	var i = randi_range(0, clouds.size()-1)
+	var cloud = clouds[i].instantiate() as Sprite3D
+	cloud.rotate(Vector3.UP, randf() * 100)
+	var y = randf_range(-3, -20)
+	cloud.position = Vector3(randf_range(-30, 30), y, z + y)
+	add_child(cloud)
+"
 
 [sub_resource type="GDScript" id="GDScript_bdcc4"]
 script/source = "extends Area3D
@@ -86,17 +123,18 @@ script/source = "extends Node
 @onready var level_manager = %LevelManager
 
 const swoop_threat_res = preload(\"uid://4lm10a5i4ijw\")
-func swoop(offset: Vector3 = Vector3.ZERO):
+func swoop(offset: Vector3 = Vector3.ZERO, rotate: float = 0):
 	var enemy = swoop_threat_res.instantiate()
 	enemy.position = offset
+	enemy.rotate(Vector3.UP, rotate)
 	%EnemySubtree.add_child(enemy)
 
 func swoop_group(count: int):
 	var offset = Vector3.ZERO
 	for i in range(count):
-		swoop(offset)
+		swoop(offset, -i*PI/2.0)
 		offset += Vector3.BACK * 0.8
-		await get_tree().create_timer(0.25).timeout
+		await get_tree().create_timer(1.4).timeout
 
 
 var ring_res = preload(\"res://prefabs/summons/shrink_ring_summon.tscn\")
@@ -160,32 +198,17 @@ tracks/0/path = NodePath("LevelManager/TestFormations")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(1.0333333, 1.7966669, 2.5666668, 3.1366668, 3.926667, 5.8, 8.966666, 9.766666),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0.06666666, 5.8, 10.566667),
+"transitions": PackedFloat32Array(1, 1, 1),
 "values": [{
-"args": [],
-"method": &"line_summon"
-}, {
-"args": [],
-"method": &"line_summon"
-}, {
-"args": [],
-"method": &"line_summon"
-}, {
-"args": [],
-"method": &"line_summon"
-}, {
-"args": [],
-"method": &"line_summon"
-}, {
-"args": [],
-"method": &"ring_summon"
-}, {
-"args": [],
-"method": &"ring_summon"
-}, {
-"args": [3],
+"args": [4],
 "method": &"swoop_group"
+}, {
+"args": [],
+"method": &"ring_summon"
+}, {
+"args": [],
+"method": &"line_summon"
 }]
 }
 
@@ -202,7 +225,7 @@ grow_amount = 0.1
 [sub_resource type="ImmediateMesh" id="ImmediateMesh_v3a5a"]
 
 [sub_resource type="Curve" id="Curve_ycdy4"]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.082397, 0.10769236), 2.3581192, 2.3581192, 0, 0, Vector2(0.32594937, 0.53459126), 1.3598148, 1.3598148, 0, 0, Vector2(1, 1), 0.21394251, 0.0, 0, 0]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.12341772, 0.07547176), 2.3581192, 2.3581192, 0, 0, Vector2(0.32594937, 0.53459126), 1.3598148, 1.3598148, 0, 0, Vector2(1, 1), 0.21394251, 0.0, 0, 0]
 point_count = 4
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_7hm8h"]
@@ -244,6 +267,42 @@ func _ready() -> void:
 	sphere_mesh.height = radius*2
 "
 
+[sub_resource type="GDScript" id="GDScript_mte56"]
+script/source = "extends SimpleComponent
+
+@export var material : Material
+@export var flash_speed : float = 0.08
+
+var active := false
+var flash_counter : float = 0
+
+func _process(delta: float) -> void:
+	if active:
+		flash_counter -= delta
+		if flash_counter > 0:
+			apply_material_to_subtree(parent, null)
+		else:
+			apply_material_to_subtree(parent, material)
+		
+		if flash_counter < -flash_speed:
+			flash_counter = flash_speed
+
+func on_invincible_start():
+	active = true
+	flash_counter = flash_speed
+
+func on_invincible_end():
+	active = false
+	apply_material_to_subtree(parent, null)
+
+func apply_material_to_subtree(node: Node, mat: Material) -> void:
+	if node is MeshInstance3D:
+		node.material_overlay = mat
+
+	for child in node.get_children():
+		apply_material_to_subtree(child, mat)
+"
+
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_v3a5a"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1bvp3"]
@@ -255,13 +314,27 @@ albedo_color = Color(1, 0, 1, 1)
 radius = 0.1
 height = 0.2
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dg77c"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0)
+
 [sub_resource type="TorusMesh" id="TorusMesh_dg77c"]
 inner_radius = 0.4
 outer_radius = 0.15
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dg77c"]
-transparency = 1
-albedo_color = Color(1, 1, 1, 0)
+[sub_resource type="GDScript" id="GDScript_yc10j"]
+script/source = "extends MeshInstance3D
+
+func _ready() -> void:
+	visible = false
+
+func on_dash_point_update(point):
+	visible = true
+	global_position = point + Vector3.DOWN
+
+func on_dash_released():
+	visible = false
+"
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jscy8"]
 render_priority = 0
@@ -276,15 +349,8 @@ shader_parameter/vertical_lines_density = 15.0
 
 [sub_resource type="ImmediateMesh" id="ImmediateMesh_f8h0b"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5vw27"]
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_efxa6"]
-top_radius = 0.06
-bottom_radius = 0.3
-height = 1.4
-
 [sub_resource type="SphereShape3D" id="SphereShape3D_v3a5a"]
-radius = 0.75
+radius = 0.78
 
 [node name="Main" type="Node3D" unique_id=1037926069]
 script = SubResource("GDScript_v3a5a")
@@ -339,12 +405,17 @@ light_color = Color(1, 0.9098039, 0.91764706, 1)
 shadow_enabled = true
 
 [node name="Floor" type="MeshInstance3D" parent="." unique_id=1539506947]
+transform = Transform3D(1.11, 0, 0, 0, 1.11, 0, 0, 0, 1.11, 0, -0.026948929, 0)
 mesh = SubResource("QuadMesh_3hjku")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Floor" unique_id=1438443089]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Floor/StaticBody3D" unique_id=1055680507]
 shape = SubResource("WorldBoundaryShape3D_v3a5a")
+
+[node name="Clouds" type="Node3D" parent="." unique_id=600553520]
+script = SubResource("GDScript_h3avq")
+clouds = Array[PackedScene]([ExtResource("4_y6deb"), ExtResource("5_2wyq8"), ExtResource("6_vxglm")])
 
 [node name="ArenaEnemyArea" type="Area3D" parent="." unique_id=627387010]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -389,19 +460,36 @@ collision_mask = 0
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerBoundary/ArenaWall4" unique_id=2050554618]
 shape = SubResource("BoxShape3D_v3a5a")
 
-[node name="OverheadPCam" type="Node3D" parent="." unique_id=77543087]
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1928166506]
+transform = Transform3D(1, 0, 0, 0, 0.17576186, 0.9844327, 0, -0.9844327, 0.17576186, 0, 13.834717, 3.5347252)
+top_level = true
+
+[node name="PhantomCameraHost" type="Node" parent="Camera3D" unique_id=231316606]
+process_priority = 300
+process_physics_priority = 300
+script = ExtResource("4_dp3eg")
+metadata/_custom_type_script = "uid://bd046eokvcnu2"
+
+[node name="CameraManager" type="Node" parent="." unique_id=339056219 node_paths=PackedStringArray("overhead_pcam", "character_pcam", "dash_pcam")]
+script = ExtResource("7_jscy8")
+overhead_pcam = NodePath("OverheadPCam")
+character_pcam = NodePath("ThirdPersonCam")
+dash_pcam = NodePath("ThirdPersonCam2")
+
+[node name="OverheadPCam" type="Node3D" parent="CameraManager" unique_id=77543087]
 transform = Transform3D(1, 0, 0, 0, 0.17576186, 0.9844327, 0, -0.9844327, 0.17576186, 0, 13.834717, 3.5347252)
 script = ExtResource("16_0ld40")
+priority = 4
 tween_resource = SubResource("Resource_yc10j")
 metadata/_custom_type_script = "uid://csjccrhj5wnx7"
 
-[node name="ThirdPersonCam" type="Node3D" parent="." unique_id=270933732 node_paths=PackedStringArray("follow_target")]
+[node name="ThirdPersonCam" type="Node3D" parent="CameraManager" unique_id=270933732 node_paths=PackedStringArray("follow_target")]
 transform = Transform3D(1, 0, 0, 0, 0.25881907, 0.9659258, 0, -0.9659258, 0.25881907, -7.146304, 7.7765756, 2.0705526)
 top_level = true
 script = ExtResource("16_0ld40")
 priority = 1
 follow_mode = 5
-follow_target = NodePath("../PlayerSubtree/Tim/SophiaSkin")
+follow_target = NodePath("../../PlayerSubtree/Tim/SophiaSkin")
 tween_resource = SubResource("Resource_yc10j")
 follow_distance = 8.0
 vertical_rotation_offset = 0.9564404300928928
@@ -410,12 +498,12 @@ align_transform_with_view = Callable()
 align_position_with_view = Callable()
 metadata/_custom_type_script = "uid://csjccrhj5wnx7"
 
-[node name="ThirdPersonCam2" type="Node3D" parent="." unique_id=2038637449 node_paths=PackedStringArray("follow_targets")]
+[node name="ThirdPersonCam2" type="Node3D" parent="CameraManager" unique_id=2038637449 node_paths=PackedStringArray("follow_targets")]
 transform = Transform3D(1, 0, 0, 0, 0.25881907, 0.9659258, 0, -0.9659258, 0.25881907, -6.308492, 9.70088, 2.4811485)
 top_level = true
 script = ExtResource("16_0ld40")
 follow_mode = 3
-follow_targets = [NodePath("../PlayerSubtree/Tim"), NodePath("../PlayerSubtree/Tim/DebugVisuals/DashMarker")]
+follow_targets = [NodePath("../../PlayerSubtree/Tim"), NodePath("../../PlayerSubtree/Tim/DashMarker")]
 tween_resource = SubResource("Resource_yc10j")
 follow_distance = 9.5
 vertical_rotation_offset = 0.9564404300928928
@@ -423,17 +511,6 @@ spring_length = 9.5
 align_transform_with_view = Callable()
 align_position_with_view = Callable()
 metadata/_custom_type_script = "uid://csjccrhj5wnx7"
-
-[node name="Camera3D" type="Camera3D" parent="." unique_id=1928166506]
-physics_interpolation_mode = 1
-transform = Transform3D(1, 0, 0, 0, 0.25881907, 0.9659258, 0, -0.9659258, 0.25881907, -7.146304, 7.7765756, 2.0705526)
-top_level = true
-
-[node name="PhantomCameraHost" type="Node" parent="Camera3D" unique_id=231316606]
-process_priority = 300
-process_physics_priority = 300
-script = ExtResource("4_dp3eg")
-metadata/_custom_type_script = "uid://bd046eokvcnu2"
 
 [node name="LevelManager" type="Node" parent="." unique_id=218049675]
 unique_name_in_owner = true
@@ -448,6 +525,7 @@ libraries/ = SubResource("AnimationLibrary_vivmo")
 autoplay = &"test"
 
 [node name="ArenaBoundaryMesh" type="MeshInstance3D" parent="LevelManager" unique_id=92690838]
+visible = false
 material_override = SubResource("StandardMaterial3D_yc10j")
 mesh = SubResource("ImmediateMesh_v3a5a")
 
@@ -488,6 +566,10 @@ collision_mask = 65
 [node name="SophiaSkin" parent="PlayerSubtree/Tim" unique_id=1044800334 instance=ExtResource("12_dp3eg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 
+[node name="HitFlash" type="Node" parent="PlayerSubtree/Tim/SophiaSkin" unique_id=2022965823]
+script = SubResource("GDScript_mte56")
+material = ExtResource("15_pm3ni")
+
 [node name="CapsuleMesh" type="MeshInstance3D" parent="PlayerSubtree/Tim" unique_id=1917269850]
 visible = false
 mesh = SubResource("CapsuleMesh_v3a5a")
@@ -504,29 +586,29 @@ visible = false
 material_override = SubResource("StandardMaterial3D_f8h0b")
 mesh = SubResource("SphereMesh_3hjku")
 
-[node name="DebugVisuals" type="Node" parent="PlayerSubtree/Tim" unique_id=907704069 node_paths=PackedStringArray("dash_charge", "tim_mesh", "knife_mesh")]
+[node name="DashMarker" type="MeshInstance3D" parent="PlayerSubtree/Tim" unique_id=271881641]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.47068, 0, 0.044734478)
+top_level = true
+material_override = SubResource("StandardMaterial3D_dg77c")
+mesh = SubResource("TorusMesh_dg77c")
+script = SubResource("GDScript_yc10j")
+
+[node name="Effect" type="MeshInstance3D" parent="PlayerSubtree/Tim/DashMarker" unique_id=1075999092]
+transform = Transform3D(0.97, 0, 0, 0, 0.97, 0, 0, 0, 0.97, 0, 0.15, 0)
+material_override = SubResource("ShaderMaterial_jscy8")
+mesh = SubResource("PlaneMesh_v3a5a")
+
+[node name="DebugVisuals" type="Node" parent="PlayerSubtree/Tim" unique_id=907704069 node_paths=PackedStringArray("dash_charge", "tim_mesh")]
 process_mode = 4
 script = ExtResource("5_dp3eg")
 dash_charge = NodePath("../States/DashCharge")
 tim_mesh = NodePath("../CapsuleMesh")
-knife_mesh = NodePath("../../Knife/MeshHolder/MeshInstance3D")
 
 [node name="MouseMarker" type="MeshInstance3D" parent="PlayerSubtree/Tim/DebugVisuals" unique_id=1008251832]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 5)
 top_level = true
 visible = false
 mesh = SubResource("TorusMesh_dg77c")
-
-[node name="DashMarker" type="MeshInstance3D" parent="PlayerSubtree/Tim/DebugVisuals" unique_id=271881641]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.47068, 0, 0.044734478)
-top_level = true
-material_override = SubResource("StandardMaterial3D_dg77c")
-mesh = SubResource("TorusMesh_dg77c")
-
-[node name="Effect" type="MeshInstance3D" parent="PlayerSubtree/Tim/DebugVisuals/DashMarker" unique_id=1075999092]
-transform = Transform3D(0.97, 0, 0, 0, 0.97, 0, 0, 0, 0.97, 0, 0.120449185, 0)
-material_override = SubResource("ShaderMaterial_jscy8")
-mesh = SubResource("PlaneMesh_v3a5a")
 
 [node name="FlyMarker" type="MeshInstance3D" parent="PlayerSubtree/Tim/DebugVisuals" unique_id=1886788349]
 top_level = true
@@ -538,10 +620,9 @@ transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.2, -4.3078747, 1.0491691, 
 script = ExtResource("6_0ld40")
 follow_point = NodePath("../Tim/KnifeFollowHolder/KnifeFollowPoint")
 
-[node name="VisualManager" type="Node" parent="PlayerSubtree/Knife" unique_id=1870996993 node_paths=PackedStringArray("mesh_holder", "mesh")]
+[node name="VisualManager" type="Node" parent="PlayerSubtree/Knife" unique_id=1870996993 node_paths=PackedStringArray("mesh_holder")]
 script = ExtResource("7_gqmmt")
 mesh_holder = NodePath("../MeshHolder")
-mesh = NodePath("../MeshHolder/MeshInstance3D")
 
 [node name="HitManager" type="Node" parent="PlayerSubtree/Knife" unique_id=20058081 node_paths=PackedStringArray("hitbox")]
 script = ExtResource("8_yc10j")
@@ -552,12 +633,6 @@ script = ExtResource("9_jscy8")
 
 [node name="MeshHolder" type="Node3D" parent="PlayerSubtree/Knife" unique_id=970053583]
 transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="PlayerSubtree/Knife/MeshHolder" unique_id=198630414]
-transform = Transform3D(0.4, 0, 0, 0, -4.371139e-08, 1.52, 0, -1, -6.644131e-08, 0, 0, 0)
-visible = false
-material_override = SubResource("StandardMaterial3D_5vw27")
-mesh = SubResource("CylinderMesh_efxa6")
 
 [node name="Sword_0" parent="PlayerSubtree/Knife/MeshHolder" unique_id=357500504 instance=ExtResource("19_0ld40")]
 transform = Transform3D(2.025, 0, 0, 0, 2.025, 0, 0, 0, 2.025, 0, 0, 0)

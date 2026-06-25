@@ -9,5 +9,5 @@ albedo_texture = ExtResource("2_0fhvf")
 [node name="Sword_0" unique_id=357500504 instance=ExtResource("1_mbaob")]
 
 [node name="Cylinder" parent="." index="0" unique_id=1023348620]
-transform = Transform3D(1, 0, 0, 0, 3.005, 0, 0, 0, 1, 0, 0, 0.345)
+transform = Transform3D(1.465, 0, 0, 0, 3.9, 0, 0, 0, 1, 0, 0, 0.345)
 material_override = SubResource("StandardMaterial3D_35jiv")

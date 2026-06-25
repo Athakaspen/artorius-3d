@@ -1,9 +1,8 @@
 [gd_scene format=3 uid="uid://cgya1kocq4amq"]
 
-[ext_resource type="Texture2D" uid="uid://bea6yu2daoq55" path="res://icon.svg" id="1_4mng4"]
+[ext_resource type="Texture2D" uid="uid://jydhe8g3iuru" path="res://textures/heart.png" id="1_g17bk"]
 
 [node name="Heart" type="TextureRect" unique_id=721561373]
-self_modulate = Color(1, 0, 0, 1)
 custom_minimum_size = Vector2(64, 64)
-texture = ExtResource("1_4mng4")
+texture = ExtResource("1_g17bk")
 expand_mode = 1
