@@ -16,16 +16,24 @@
 [ext_resource type="PackedScene" uid="uid://c00ncr7y0cisl" path="res://prefabs/clouds/cloud_3.tscn" id="6_vxglm"]
 [ext_resource type="Script" uid="uid://c3ticqx31o5xn" path="res://scripts/knife_visual_manager.gd" id="7_gqmmt"]
 [ext_resource type="Script" uid="uid://bdr1rykkfwm7e" path="res://scripts/camera_manager.gd" id="7_jscy8"]
+[ext_resource type="Script" uid="uid://c2tnf00fboqh7" path="res://scripts/score_manager.gd" id="8_2f3dj"]
 [ext_resource type="Shape3D" uid="uid://cowcj52wfpss5" path="res://player_shape.tres" id="8_a8y0u"]
 [ext_resource type="Script" uid="uid://bit2ncux0jsm7" path="res://scripts/knife_hit_manager.gd" id="8_yc10j"]
 [ext_resource type="Script" uid="uid://bmij1nyxkj3wm" path="res://scripts/knife_fly_manager.gd" id="9_jscy8"]
 [ext_resource type="Material" uid="uid://husbjvdyujmi" path="res://materials/pixel_perfect_outline.tres" id="11_gqmmt"]
 [ext_resource type="PackedScene" uid="uid://prh35jb6tjtd" path="res://models/sophia_skin/sophia_skin.tscn" id="12_dp3eg"]
+[ext_resource type="Script" uid="uid://c6g60qum0p7wi" path="res://scripts/formations.gd" id="13_2f3dj"]
 [ext_resource type="Material" uid="uid://drat2fbqnc2sh" path="res://materials/hitflash.tres" id="15_pm3ni"]
 [ext_resource type="Script" uid="uid://csjccrhj5wnx7" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="16_0ld40"]
 [ext_resource type="Shader" uid="uid://l7tua5gd8aop" path="res://materials/test.gdshader" id="16_yc10j"]
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="17_gqmmt"]
 [ext_resource type="PackedScene" uid="uid://6nmn1naonmxa" path="res://models/sword/sword.tscn" id="19_0ld40"]
+[ext_resource type="Script" uid="uid://nm7a8k1di07e" path="res://scripts/tutorial.gd" id="29_yq6so"]
+[ext_resource type="Script" uid="uid://ca62vebyl8okn" path="res://scripts/components/enemy_damageable.gd" id="31_j8jky"]
+[ext_resource type="Script" uid="uid://df3aqncha7eo5" path="res://scripts/components/free_on_dead.gd" id="32_kmb1v"]
+[ext_resource type="Script" uid="uid://bm08pp6e32dvu" path="res://scripts/components/hit_flash.gd" id="33_fuf3a"]
+[ext_resource type="Material" uid="uid://c3hqcw67pm2bk" path="res://materials/energy_bullet.tres" id="34_dgi5k"]
+[ext_resource type="PackedScene" uid="uid://kl0rpilei5ap" path="res://models/food/burger-double.fbx" id="34_pibwh"]
 
 [sub_resource type="GDScript" id="GDScript_v3a5a"]
 script/source = "extends Node3D
@@ -33,14 +41,81 @@ script/source = "extends Node3D
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	Singleton.set_lives(3)
 	LevelObjects.Tim = %Tim
 	LevelObjects.Knife = %Knife
 	LevelObjects.LevelManager = %LevelManager
 	LevelObjects.CameraManager = $CameraManager
+	LevelObjects.ScoreManager = $ScoreManager
 	LevelObjects.PlayerSubtree = %PlayerSubtree
 	LevelObjects.EnemySubtree = %EnemySubtree
 	LevelObjects.BulletSubtree = %BulletSubtree
 	LevelObjects.PickupSubtree = %PickupSubtree
+	LevelObjects.DeathPanel = $CanvasLayer/UI/DeathPanel
+	LevelObjects.WinPanel = $CanvasLayer/UI/WinPanel
+
+func do_restart():
+	get_tree().change_scene_to_file(\"res://scenes/main.tscn\")
+"
+
+[sub_resource type="GDScript" id="GDScript_5qc01"]
+script/source = "extends Label
+
+func _ready() -> void:
+	text = \"Score: 0\"
+
+func _on_score_manager_score_change(new_value: int, delta: int) -> void:
+	text = \"Score: \" + str(new_value)
+"
+
+[sub_resource type="GDScript" id="GDScript_jtfw6"]
+script/source = "extends PanelContainer
+
+func show_lose():
+	self.visible = true
+	$\"MarginContainer/VBoxContainer/High Score\".text = \"High Score: \" + str(Singleton.high_score)
+"
+
+[sub_resource type="GDScript" id="GDScript_yq6so"]
+script/source = "extends PanelContainer
+
+func show_win():
+	self.visible = true
+	$MarginContainer/VBoxContainer/Score.text = \"Score: \" + str(LevelObjects.ScoreManager.cur_score)
+	$\"MarginContainer/VBoxContainer/High Score\".text = \"High Score: \" + str(Singleton.high_score)
+"
+
+[sub_resource type="GDScript" id="GDScript_fv21b"]
+script/source = "extends Label
+
+
+func _on_score_manager_score_change(new_value: int, delta: int) -> void:
+	text = \"Score: \" + str(new_value)
+"
+
+[sub_resource type="GDScript" id="GDScript_j8jky"]
+script/source = "extends Label
+
+func _ready() -> void:
+	Singleton.connect(\"high_score_change\", cahnge)
+
+func cahnge(new: int):
+	text = \"High Score: \" + str(new)
+"
+
+[sub_resource type="Gradient" id="Gradient_2f3dj"]
+colors = PackedColorArray(0, 0, 0, 1, 0.14, 0.14, 0.14, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_v3a5a"]
+gradient = SubResource("Gradient_2f3dj")
+
+[sub_resource type="GDScript" id="GDScript_3hjku"]
+script/source = "extends TextureRect
+
+func _on_give_up_pressed() -> void:
+	visible = true
+	await get_tree().create_timer(1.0).timeout
+	get_tree().quit()
 "
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ig7tw"]
@@ -117,45 +192,9 @@ size = Vector3(2, 2, 30)
 script = ExtResource("17_gqmmt")
 duration = 0.3
 
-[sub_resource type="GDScript" id="GDScript_3hjku"]
-script/source = "extends Node
-
-@onready var level_manager = %LevelManager
-
-const swoop_threat_res = preload(\"uid://4lm10a5i4ijw\")
-func swoop(offset: Vector3 = Vector3.ZERO, rotate: float = 0):
-	var enemy = swoop_threat_res.instantiate()
-	enemy.position = offset
-	enemy.rotate(Vector3.UP, rotate)
-	%EnemySubtree.add_child(enemy)
-
-func swoop_group(count: int):
-	var offset = Vector3.ZERO
-	for i in range(count):
-		swoop(offset, -i*PI/2.0)
-		offset += Vector3.BACK * 0.8
-		await get_tree().create_timer(1.4).timeout
-
-
-var ring_res = preload(\"res://prefabs/summons/shrink_ring_summon.tscn\")
-func ring_summon():
-	var ring = ring_res.instantiate()
-	ring.tim = LevelObjects.Tim
-	LevelObjects.BulletSubtree.add_child(ring)
-
-var line_res = preload(\"res://prefabs/summons/line_summon.tscn\")
-func line_summon():
-	var line = line_res.instantiate()
-	line.p1 += Vector3(randf_range(-2, 2), 0, randf_range(-2, 2))
-	line.p2 += Vector3(randf_range(-2, 2), 0, randf_range(-2, 2))
-	line.num_bullets += randi_range(-5, 5)
-	line.position.y = 1
-	LevelObjects.BulletSubtree.add_child(line)
-"
-
 [sub_resource type="Animation" id="Animation_w48qg"]
 resource_name = "level1"
-length = 20.0
+length = 120.0
 tracks/0/type = "method"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -170,21 +209,126 @@ tracks/0/keys = {
 tracks/1/type = "method"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("LevelManager/TestFormations")
+tracks/1/path = NodePath("LevelManager/Formations")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(1.0666667, 6.9333334, 12.566667),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(1.8, 5.3, 9.2, 12.166667, 19.933332, 27.166666, 28.466665, 29.833334, 35.566666, 46.633335, 49.266666, 59.466667, 67.9, 70.50001, 70.86667, 75.46667, 83.333336, 83.47181, 84.674385, 84.81286, 86.0282, 86.16667, 92.9, 93.02058, 98.700005, 99.433334, 102.333336, 104.63344, 106.256805, 108.13333, 109.81718, 111.69988, 113.41143, 114.12458, 115.18004, 116.14992, 116.40665, 119.166664),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "values": [{
-"args": [],
-"method": &"first_sentry"
+"args": [0.0, 0],
+"method": &"apple"
 }, {
-"args": [],
-"method": &"second_sentry"
+"args": [Vector3(0, 0, 0), -90.0],
+"method": &"swoop"
+}, {
+"args": [0.0, 1],
+"method": &"apple"
 }, {
 "args": [3],
 "method": &"swoop_group"
+}, {
+"args": [0.0, 0, false],
+"method": &"fries"
+}, {
+"args": [0.0, 3],
+"method": &"apple"
+}, {
+"args": [4.0, 3],
+"method": &"apple"
+}, {
+"args": [-4.0, 3],
+"method": &"apple"
+}, {
+"args": [],
+"method": &"swoop_loop"
+}, {
+"args": [],
+"method": &"ring_summon"
+}, {
+"args": [0.0, 1, true],
+"method": &"fries"
+}, {
+"args": [Vector3(0, 0, 0), 0.0],
+"method": &"taco"
+}, {
+"args": [],
+"method": &"ring_summon"
+}, {
+"args": [0.0, 2, false],
+"method": &"fries"
+}, {
+"args": [0.0, 0, false],
+"method": &"fries"
+}, {
+"args": [Vector3(0, 0, 0), 0.0],
+"method": &"swoop"
+}, {
+"args": [7.0, 0],
+"method": &"apple"
+}, {
+"args": [-7.0, 0],
+"method": &"apple"
+}, {
+"args": [7.0, 0],
+"method": &"apple"
+}, {
+"args": [-7.0, 0],
+"method": &"apple"
+}, {
+"args": [7.0, 0],
+"method": &"apple"
+}, {
+"args": [-7.0, 0],
+"method": &"apple"
+}, {
+"args": [],
+"method": &"ring_summon"
+}, {
+"args": [],
+"method": &"line_summon"
+}, {
+"args": [],
+"method": &"line_summon"
+}, {
+"args": [],
+"method": &"line_summon"
+}, {
+"args": [],
+"method": &"ring_summon"
+}, {
+"args": [],
+"method": &"line_summon"
+}, {
+"args": [],
+"method": &"line_summon"
+}, {
+"args": [],
+"method": &"line_summon"
+}, {
+"args": [],
+"method": &"line_summon"
+}, {
+"args": [],
+"method": &"line_summon"
+}, {
+"args": [],
+"method": &"line_summon"
+}, {
+"args": [],
+"method": &"line_summon"
+}, {
+"args": [],
+"method": &"line_summon"
+}, {
+"args": [],
+"method": &"line_summon"
+}, {
+"args": [],
+"method": &"line_summon"
+}, {
+"args": [0],
+"method": &"cake"
 }]
 }
 
@@ -194,7 +338,7 @@ length = 12.3
 tracks/0/type = "method"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("LevelManager/TestFormations")
+tracks/0/path = NodePath("LevelManager/Formations")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -352,6 +496,39 @@ shader_parameter/vertical_lines_density = 15.0
 [sub_resource type="SphereShape3D" id="SphereShape3D_v3a5a"]
 radius = 0.78
 
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_v3a5a"]
+height = 1.0
+radius = 1.5
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bdcc4"]
+render_priority = 0
+shader = ExtResource("16_yc10j")
+shader_parameter/ring_color = Color(0, 0.8, 1, 1)
+shader_parameter/ring_radius = 0.4
+shader_parameter/ring_thickness = 0.05
+shader_parameter/vertical_lines_speed = 1.5
+shader_parameter/vertical_lines_density = 20.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_3hjku"]
+size = Vector2(4, 4)
+
+[sub_resource type="GDScript" id="GDScript_dgi5k"]
+script/source = "extends Enemy
+
+func on_dead():
+	$\"../..\".on_burger_dead()
+"
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_yq6so"]
+radius = 0.6
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_bdcc4"]
+size = Vector3(22, 2, 2)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_3hjku"]
+radius = 0.9
+height = 22.0
+
 [node name="Main" type="Node3D" unique_id=1037926069]
 script = SubResource("GDScript_v3a5a")
 
@@ -395,6 +572,172 @@ size_flags_vertical = 0
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
+
+[node name="ScoreMargin" type="MarginContainer" parent="CanvasLayer/UI" unique_id=794539392]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 24
+
+[node name="ScoreLabel" type="Label" parent="CanvasLayer/UI/ScoreMargin" unique_id=1718369675]
+layout_mode = 2
+theme_override_font_sizes/font_size = 42
+text = "Score: XXX"
+script = SubResource("GDScript_5qc01")
+
+[node name="DeathPanel" type="PanelContainer" parent="CanvasLayer/UI" unique_id=990865667]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_jtfw6")
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/DeathPanel" unique_id=1629300270]
+layout_mode = 2
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 50
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/DeathPanel/MarginContainer" unique_id=1827632228]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="YOU DIED" type="Label" parent="CanvasLayer/UI/DeathPanel/MarginContainer/VBoxContainer" unique_id=2005333387]
+layout_mode = 2
+theme_override_font_sizes/font_size = 96
+text = "YOU DIED"
+
+[node name="High Score" type="Label" parent="CanvasLayer/UI/DeathPanel/MarginContainer/VBoxContainer" unique_id=1522655356]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "High Score: 00000"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/DeathPanel/MarginContainer/VBoxContainer" unique_id=144987337]
+layout_mode = 2
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="Give Up" type="Button" parent="CanvasLayer/UI/DeathPanel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=129067204]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Give up"
+
+[node name="Try Again" type="Button" parent="CanvasLayer/UI/DeathPanel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1827444676]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Try again"
+
+[node name="WinPanel" type="PanelContainer" parent="CanvasLayer/UI" unique_id=2099625691]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_yq6so")
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/WinPanel" unique_id=365101114]
+layout_mode = 2
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 50
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/WinPanel/MarginContainer" unique_id=1760884265]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="YOU WIN!" type="Label" parent="CanvasLayer/UI/WinPanel/MarginContainer/VBoxContainer" unique_id=187655007]
+layout_mode = 2
+theme_override_font_sizes/font_size = 104
+text = "YOU WIN!"
+horizontal_alignment = 1
+
+[node name="tfp" type="Label" parent="CanvasLayer/UI/WinPanel/MarginContainer/VBoxContainer" unique_id=1845421275]
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+text = "Thanks for playing!"
+horizontal_alignment = 1
+
+[node name="Score" type="Label" parent="CanvasLayer/UI/WinPanel/MarginContainer/VBoxContainer" unique_id=469195281]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Score: 0000"
+horizontal_alignment = 1
+script = SubResource("GDScript_fv21b")
+
+[node name="High Score" type="Label" parent="CanvasLayer/UI/WinPanel/MarginContainer/VBoxContainer" unique_id=1300401929]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "High Score: 00000"
+horizontal_alignment = 1
+script = SubResource("GDScript_j8jky")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/WinPanel/MarginContainer/VBoxContainer" unique_id=2030894838]
+layout_mode = 2
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="Retry" type="Button" parent="CanvasLayer/UI/WinPanel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1706209419]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Retry"
+
+[node name="Endless" type="Button" parent="CanvasLayer/UI/WinPanel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=828556828]
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Endless"
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/UI" unique_id=216158328]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture1D_v3a5a")
+script = SubResource("GDScript_3hjku")
+
+[node name="Label" type="Label" parent="CanvasLayer/UI/TextureRect" unique_id=148066685]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -34.0
+offset_top = -11.5
+offset_right = 34.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 150
+text = "THE END"
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1252001221]
 environment = SubResource("Environment_v3a5a")
@@ -461,7 +804,8 @@ collision_mask = 0
 shape = SubResource("BoxShape3D_v3a5a")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1928166506]
-transform = Transform3D(1, 0, 0, 0, 0.17576186, 0.9844327, 0, -0.9844327, 0.17576186, 0, 13.834717, 3.5347252)
+physics_interpolation_mode = 1
+transform = Transform3D(1, 0, 0, 0, 0.36265063, 0.9319252, 0, -0.9319252, 0.36265063, 0, 7.504401, 2.901205)
 top_level = true
 
 [node name="PhantomCameraHost" type="Node" parent="Camera3D" unique_id=231316606]
@@ -469,6 +813,9 @@ process_priority = 300
 process_physics_priority = 300
 script = ExtResource("4_dp3eg")
 metadata/_custom_type_script = "uid://bd046eokvcnu2"
+
+[node name="ScoreManager" type="Node" parent="." unique_id=1931939109]
+script = ExtResource("8_2f3dj")
 
 [node name="CameraManager" type="Node" parent="." unique_id=339056219 node_paths=PackedStringArray("overhead_pcam", "character_pcam", "dash_pcam")]
 script = ExtResource("7_jscy8")
@@ -479,12 +826,11 @@ dash_pcam = NodePath("ThirdPersonCam2")
 [node name="OverheadPCam" type="Node3D" parent="CameraManager" unique_id=77543087]
 transform = Transform3D(1, 0, 0, 0, 0.17576186, 0.9844327, 0, -0.9844327, 0.17576186, 0, 13.834717, 3.5347252)
 script = ExtResource("16_0ld40")
-priority = 4
 tween_resource = SubResource("Resource_yc10j")
 metadata/_custom_type_script = "uid://csjccrhj5wnx7"
 
 [node name="ThirdPersonCam" type="Node3D" parent="CameraManager" unique_id=270933732 node_paths=PackedStringArray("follow_target")]
-transform = Transform3D(1, 0, 0, 0, 0.25881907, 0.9659258, 0, -0.9659258, 0.25881907, -7.146304, 7.7765756, 2.0705526)
+transform = Transform3D(1, 0, 0, 0, 0.36265063, 0.9319252, 0, -0.9319252, 0.36265063, 0, 7.504401, 2.901205)
 top_level = true
 script = ExtResource("16_0ld40")
 priority = 1
@@ -499,7 +845,7 @@ align_position_with_view = Callable()
 metadata/_custom_type_script = "uid://csjccrhj5wnx7"
 
 [node name="ThirdPersonCam2" type="Node3D" parent="CameraManager" unique_id=2038637449 node_paths=PackedStringArray("follow_targets")]
-transform = Transform3D(1, 0, 0, 0, 0.25881907, 0.9659258, 0, -0.9659258, 0.25881907, -6.308492, 9.70088, 2.4811485)
+transform = Transform3D(1, 0, 0, 0, 0.25881907, 0.9659258, 0, -0.9659258, 0.25881907, 0, 9.700795, 2.4587812)
 top_level = true
 script = ExtResource("16_0ld40")
 follow_mode = 3
@@ -516,13 +862,12 @@ metadata/_custom_type_script = "uid://csjccrhj5wnx7"
 unique_name_in_owner = true
 script = ExtResource("4_gqmmt")
 
-[node name="TestFormations" type="Node" parent="LevelManager" unique_id=373923190]
-script = SubResource("GDScript_3hjku")
+[node name="Formations" type="Node" parent="LevelManager" unique_id=373923190]
+script = ExtResource("13_2f3dj")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="LevelManager" unique_id=1835240327]
 root_node = NodePath("../..")
 libraries/ = SubResource("AnimationLibrary_vivmo")
-autoplay = &"test"
 
 [node name="ArenaBoundaryMesh" type="MeshInstance3D" parent="LevelManager" unique_id=92690838]
 visible = false
@@ -534,9 +879,10 @@ unique_name_in_owner = true
 
 [node name="Tim" type="CharacterBody3D" parent="PlayerSubtree" unique_id=1288390025]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.146304, 1.0491691, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.049, 0)
 collision_layer = 2
-collision_mask = 65
+collision_mask = 193
+axis_lock_linear_y = true
 script = ExtResource("2_jkv2x")
 
 [node name="PlayerDamageable" type="Node" parent="PlayerSubtree/Tim" unique_id=1140139603]
@@ -587,7 +933,6 @@ material_override = SubResource("StandardMaterial3D_f8h0b")
 mesh = SubResource("SphereMesh_3hjku")
 
 [node name="DashMarker" type="MeshInstance3D" parent="PlayerSubtree/Tim" unique_id=271881641]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.47068, 0, 0.044734478)
 top_level = true
 material_override = SubResource("StandardMaterial3D_dg77c")
 mesh = SubResource("TorusMesh_dg77c")
@@ -653,5 +998,124 @@ unique_name_in_owner = true
 [node name="PickupSubtree" type="Node" parent="." unique_id=47071426]
 unique_name_in_owner = true
 
+[node name="Tutorial" type="Node3D" parent="." unique_id=1464453318]
+script = ExtResource("29_yq6so")
+
+[node name="Move" type="Node3D" parent="Tutorial" unique_id=521024034]
+
+[node name="Label3D" type="Label3D" parent="Tutorial/Move" unique_id=1258775585]
+transform = Transform3D(0.99925965, 0, -0.038473234, 0.031576656, 0.571297, 0.82013583, 0.021979643, -0.82074344, 0.57087404, -0.07765865, 1.3520103, 2.2317362)
+text = "WASD / Left Stick to Move"
+font_size = 128
+
+[node name="Label3D2" type="Label3D" parent="Tutorial/Move" unique_id=230919449]
+transform = Transform3D(0.99925965, 0, -0.038473234, 0.031576656, 0.571297, 0.82013583, 0.021979643, -0.82074344, 0.57087404, -0.07765865, 1.3520103, -2.3316722)
+text = "Note: Web has some
+vusual and performance issues.
+Downloaded version is preferable."
+font_size = 128
+
+[node name="MoveArea" type="Area3D" parent="Tutorial/Move" unique_id=1265940134]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.742113, 0, 6.0906277)
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Tutorial/Move/MoveArea" unique_id=1326762635]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.45125055, 0.52628374, -0.06819439)
+shape = SubResource("CylinderShape3D_v3a5a")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Tutorial/Move/MoveArea" unique_id=1898591866]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4579811, 0.2104764, -0.044561386)
+material_override = SubResource("ShaderMaterial_bdcc4")
+mesh = SubResource("PlaneMesh_3hjku")
+
+[node name="Focus" type="Node3D" parent="Tutorial" unique_id=1603241782]
+visible = false
+
+[node name="Label3D" type="Label3D" parent="Tutorial/Focus" unique_id=1528045969]
+transform = Transform3D(0.9992596, 5.9949334e-10, -0.038473226, 0.0335774, 0.4881727, 0.872101, 0.018781582, -0.87274706, 0.48781133, 0.19710743, 1.7435951, 6.011505)
+text = "Shift / A to Focus
+(Damage Up)"
+font_size = 128
+
+[node name="Burger" type="CharacterBody3D" parent="Tutorial/Focus" unique_id=1800477246]
+transform = Transform3D(7.54979e-08, 0, -1, 0, 1, 0, 1, 0, 7.54979e-08, 0, -1, 2.815)
+collision_layer = 4
+script = SubResource("GDScript_dgi5k")
+score_id = &"none"
+
+[node name="EnemyDamageable" type="Node" parent="Tutorial/Focus/Burger" unique_id=1689036248]
+script = ExtResource("31_j8jky")
+max_hp = 100
+metadata/_custom_type_script = "uid://ca62vebyl8okn"
+
+[node name="FreeOnDead" type="Node" parent="Tutorial/Focus/Burger" unique_id=2028756952]
+script = ExtResource("32_kmb1v")
+metadata/_custom_type_script = "uid://df3aqncha7eo5"
+
+[node name="HitFlash" type="Node" parent="Tutorial/Focus/Burger" unique_id=1901981780 node_paths=PackedStringArray("visual")]
+script = ExtResource("33_fuf3a")
+visual = NodePath("../burger-double")
+material = ExtResource("15_pm3ni")
+metadata/_custom_type_script = "uid://bm08pp6e32dvu"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Tutorial/Focus/Burger" unique_id=1815924020]
+shape = SubResource("SphereShape3D_yq6so")
+
+[node name="burger-double" parent="Tutorial/Focus/Burger" unique_id=1339239634 instance=ExtResource("34_pibwh")]
+transform = Transform3D(2.815, 0, 0, 0, 2.815, 0, 0, 0, 2.815, 0, -0.51664543, 0)
+
+[node name="Dash" type="Node3D" parent="Tutorial" unique_id=1538438790]
+visible = false
+
+[node name="Label3D" type="Label3D" parent="Tutorial/Dash" unique_id=879925712]
+transform = Transform3D(0.9992596, 5.9949334e-10, -0.038473226, 0.0335774, 0.4881727, 0.872101, 0.018781582, -0.87274706, 0.48781133, 0.3215741, 1.7435951, 2.6580396)
+text = "Hold Space / X to Dash"
+font_size = 128
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Tutorial/Dash" unique_id=804063829]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.1901808, 0)
+collision_layer = 128
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Tutorial/Dash/StaticBody3D" unique_id=1486728823]
+shape = SubResource("BoxShape3D_bdcc4")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Tutorial/Dash/StaticBody3D" unique_id=1365819582]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+material_override = ExtResource("34_dgi5k")
+instance_shader_parameters/Color = Color(0.45, 0.06299999, 0.41129985, 1)
+mesh = SubResource("CapsuleMesh_3hjku")
+
+[node name="DashArea" type="Area3D" parent="Tutorial/Dash" unique_id=191381067]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.838005, 0, -4.79459)
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Tutorial/Dash/DashArea" unique_id=1769132613]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.45125055, 0.52628374, -0.06819439)
+shape = SubResource("CylinderShape3D_v3a5a")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Tutorial/Dash/DashArea" unique_id=1682670036]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4579811, 0.2104764, -0.044561386)
+material_override = SubResource("ShaderMaterial_bdcc4")
+mesh = SubResource("PlaneMesh_3hjku")
+
+[node name="GoodLuck" type="Node3D" parent="Tutorial" unique_id=1127188154]
+visible = false
+
+[node name="Label3D" type="Label3D" parent="Tutorial/GoodLuck" unique_id=34724329]
+transform = Transform3D(0.9992596, 5.9949334e-10, -0.038473226, 0.0335774, 0.4881727, 0.872101, 0.018781582, -0.87274706, 0.48781133, 0.43045354, 1.7435961, -4.287938)
+text = "Good Luck!"
+font_size = 128
+
+[connection signal="pressed" from="CanvasLayer/UI/DeathPanel/MarginContainer/VBoxContainer/HBoxContainer/Give Up" to="CanvasLayer/UI/TextureRect" method="_on_give_up_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/DeathPanel/MarginContainer/VBoxContainer/HBoxContainer/Try Again" to="." method="do_restart"]
+[connection signal="pressed" from="CanvasLayer/UI/WinPanel/MarginContainer/VBoxContainer/HBoxContainer/Retry" to="." method="do_restart"]
 [connection signal="body_entered" from="ArenaEnemyArea" to="ArenaEnemyArea" method="_on_body_entered"]
 [connection signal="body_exited" from="ArenaEnemyArea" to="ArenaEnemyArea" method="_on_body_exited"]
+[connection signal="score_change" from="ScoreManager" to="CanvasLayer/UI/ScoreMargin/ScoreLabel" method="_on_score_manager_score_change"]
+[connection signal="score_change" from="ScoreManager" to="CanvasLayer/UI/WinPanel/MarginContainer/VBoxContainer/Score" method="_on_score_manager_score_change"]
+[connection signal="animation_finished" from="LevelManager/AnimationPlayer" to="LevelManager" method="_on_animation_player_animation_finished"]
+[connection signal="body_entered" from="Tutorial/Move/MoveArea" to="Tutorial" method="_on_move_area_body_entered"]
+[connection signal="body_entered" from="Tutorial/Dash/DashArea" to="Tutorial" method="_on_dash_area_body_entered"]

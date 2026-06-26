@@ -3,6 +3,8 @@
 [ext_resource type="Texture2D" uid="uid://bqxihnsm5takt" path="res://textures/texture_07.png" id="1_8gs6u"]
 [ext_resource type="PackedScene" uid="uid://wjh1sibdcg2a" path="res://prefabs/paths/straight_path.tscn" id="2_4qdrq"]
 [ext_resource type="PackedScene" uid="uid://cyu72nfh8ivpv" path="res://prefabs/paths/swoop_path.tscn" id="2_c1gbi"]
+[ext_resource type="PackedScene" uid="uid://bxedf2mwpc8bf" path="res://prefabs/paths/circle_path.tscn" id="4_f228y"]
+[ext_resource type="PackedScene" uid="uid://dwelbhedtbp1r" path="res://prefabs/paths/z_path.tscn" id="5_mbl05"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bdcc4"]
 albedo_texture = ExtResource("1_8gs6u")
@@ -29,4 +31,10 @@ shape = SubResource("WorldBoundaryShape3D_f228y")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
 [node name="SwoopPath" parent="." unique_id=1144806001 instance=ExtResource("2_c1gbi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="CirclePath" parent="." unique_id=1239574967 instance=ExtResource("4_f228y")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="ZPath" parent="." unique_id=1745736986 instance=ExtResource("5_mbl05")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)

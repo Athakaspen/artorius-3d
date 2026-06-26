@@ -1,10 +1,10 @@
 extends Node
 
-@export var damage_normal: int = 15
-@export var damage_focus: int = 25
-@export var damage_fly: int = 50
-@export var hit_cooltime_normal: float = 0.15
-@export var hit_cooltime_focus: float = 0.1
+@export var damage_normal: int = 10
+@export var damage_focus: int = 10
+@export var damage_fly: int = 20
+@export var hit_cooltime_normal: float = 0.2
+@export var hit_cooltime_focus: float = 0.14
 @export var hit_cooltime_fly: float = 0.08
 @export var hitbox: Area3D
 

@@ -9,6 +9,9 @@ radius = 0.7
 
 [node name="Burger" unique_id=1800477246 instance=ExtResource("1_mydun")]
 
+[node name="DropPickup" parent="." index="1" unique_id=521959786]
+pickup_chance = 0.6
+
 [node name="burger" parent="." index="4" unique_id=753279264 instance=ExtResource("2_mydun")]
 transform = Transform3D(3.3, 0, 0, 0, 3.3, 0, 0, 0, 3.3, 0, -0.425, 0)
 

@@ -1,9 +1,18 @@
 class_name LevelManager
 extends Node
 
+enum {
+	TUTORIAL,
+	ANIM_LEVEL,
+	BOSS,
+	USER_MENU,
+	ENDLESS,
+}
+
 var arena_center := Vector3.ZERO
 var arena_size: float = 20 # width/height
 var spawn_margin: float = 5 # how far outside area to spawn enemies
+var state = TUTORIAL
 
 
 # Called when the node enters the scene tree for the first time.
@@ -33,31 +42,34 @@ func _process(_delta: float) -> void:
 	pass
 
 
-func get_point_on_side(side: StringName, offset: float, mirror: bool = false) -> Vector3:
-	var dist = arena_size / 2
-	var p1
-	var p2
-	var margin
-	match side:
-		&"side_top":
-			p1 = arena_center + Vector3(-dist, 0, -dist)
-			p2 = arena_center + Vector3(dist, 0, -dist)
-			margin = Vector3.FORWARD * spawn_margin
-		&"side_bottom":
-			p1 = arena_center + Vector3(-dist, 0, dist)
-			p2 = arena_center + Vector3(dist, 0, dist)
-			margin = Vector3.BACK * spawn_margin
-		&"side_left":
-			p1 = arena_center + Vector3(-dist, 0, -dist)
-			p2 = arena_center + Vector3(-dist, 0, dist)
-			margin = Vector3.LEFT * spawn_margin
-		&"side_right":
-			p1 = arena_center + Vector3(dist, 0, -dist)
-			p2 = arena_center + Vector3(dist, 0, dist)
-			margin = Vector3.RIGHT * spawn_margin
-		_:
-			print(side)
-	var from = p1 if not mirror else p2
-	var to = p2 if not mirror else p1
-	var diff = to - from
-	return from + diff * offset + margin
+func end_tutorial():
+	Singleton.tutorial_done = true
+	if state == TUTORIAL:
+		state = ANIM_LEVEL
+		$AnimationPlayer.play("level1")
+	else:
+		printerr("LEVEL MAANGER BAD TUTORIAL END")
+
+
+func on_boss_dead():
+	if state == BOSS:
+		state = USER_MENU
+		LevelObjects.WinPanel.show_win()
+	else:
+		printerr("LEVEL MAANGER BAD BOSS DED")
+
+
+func on_start_endless():
+	if state == USER_MENU:
+		state = ENDLESS
+		LevelObjects.WinPanel.visible = false
+		print("TODO: implement endless mode")
+	else:
+		printerr("LEVEL MAANGER BAD USER MENU")
+
+
+func _on_animation_player_animation_finished(anim_name: StringName) -> void:
+	if anim_name == &"level1" and state == ANIM_LEVEL:
+		state = BOSS
+	else:
+		printerr("LEVEL MAANGER BAD ANIM END")

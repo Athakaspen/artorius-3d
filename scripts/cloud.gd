@@ -11,5 +11,5 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	self.position += Vector3.BACK * delta * speed
-	if self.position.z > 20:
+	if self.position.z > 28:
 		self.queue_free()

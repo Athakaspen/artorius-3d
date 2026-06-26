@@ -6,7 +6,7 @@ var spinning: bool = true
 var speed_normal = 5.0
 var speed_focus = 1.7
 var dist_normal = 1.8
-var dist_focus = 2.3
+var dist_focus = 2.4
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

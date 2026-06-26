@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://bgji888tubelb"]
+
+[ext_resource type="Script" uid="uid://b4mjnrs4coa0x" path="res://prefabs/threats/threat.gd" id="1_co45q"]
+[ext_resource type="PackedScene" uid="uid://wjh1sibdcg2a" path="res://prefabs/paths/straight_path.tscn" id="1_ge7s2"]
+[ext_resource type="Script" uid="uid://6rydtgfrb0n2" path="res://scripts/path_follow_enemy.gd" id="1_r84fe"]
+[ext_resource type="PackedScene" uid="uid://d4ngskxcy7axy" path="res://prefabs/enemies/fries.tscn" id="2_s2ikw"]
+[ext_resource type="Script" uid="uid://br0ms3cspo2yk" path="res://string_bullet_spawner.gd" id="3_r84fe"]
+[ext_resource type="PackedScene" uid="uid://dnm8mhq805th0" path="res://prefabs/bullets/fries_bullet.tscn" id="4_s2ikw"]
+
+[sub_resource type="Curve" id="Curve_co45q"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.28990227, 0), 0.0, 0.0, 0, 0, Vector2(0.737785, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Curve" id="Curve_v3a5a"]
+_limits = [2.5, 11.0, 0.0, 1.0]
+_data = [Vector2(0, 2.6265821), 0.0, 7.512658, 0, 1, Vector2(1, 10.13924), 7.512658, 0.0, 1, 0]
+point_count = 2
+
+[node name="FriesThreat" type="Node3D" unique_id=1898473024]
+script = ExtResource("1_co45q")
+
+[node name="StraightPath" parent="." unique_id=1485756112 instance=ExtResource("1_ge7s2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -7.3006535)
+
+[node name="Fries" parent="." unique_id=1800477246 node_paths=PackedStringArray("init_path") instance=ExtResource("2_s2ikw")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+script = ExtResource("1_r84fe")
+max_speed = 6.0
+speed_curve = SubResource("Curve_co45q")
+init_path = NodePath("../StraightPath")
+score_id = &"fries"
+
+[node name="StringBulletSpawner" type="Node3D" parent="Fries" unique_id=1455856772]
+script = ExtResource("3_r84fe")
+num_bullets = 10
+speed_curve = SubResource("Curve_v3a5a")
+fire_rate = 0.6
+initial_delay = 0.4
+bullet_res = ExtResource("4_s2ikw")
+metadata/_custom_type_script = "uid://nujnf0phlvu1"

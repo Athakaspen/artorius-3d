@@ -20,7 +20,6 @@ shader_parameter/ring_radius = 0.4
 shader_parameter/ring_thickness = 0.05
 shader_parameter/vertical_lines_speed = 1.5
 shader_parameter/vertical_lines_density = 20.0
-shader_parameter/glow_intensity = 3.0
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_v3a5a"]
 

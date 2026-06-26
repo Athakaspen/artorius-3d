@@ -1,0 +1,50 @@
+[gd_scene format=3 uid="uid://dkkvx2wa1o71q"]
+
+[ext_resource type="PackedScene" uid="uid://wjh1sibdcg2a" path="res://prefabs/paths/straight_path.tscn" id="1_op0gi"]
+[ext_resource type="Script" uid="uid://b4mjnrs4coa0x" path="res://prefabs/threats/threat.gd" id="1_ygggp"]
+[ext_resource type="PackedScene" uid="uid://b3bq4o8uexe5k" path="res://prefabs/enemies/taco.tscn" id="2_ygggp"]
+[ext_resource type="Script" uid="uid://4pftlaop0ohp" path="res://scripts/heavy_enemy.gd" id="3_lu86l"]
+[ext_resource type="Script" uid="uid://dlcy0giqjc734" path="res://scripts/ring_bullet_spawner.gd" id="4_idkfp"]
+[ext_resource type="PackedScene" uid="uid://bk66ouq4p25v2" path="res://prefabs/bullets/taco_bullet.tscn" id="5_x53nq"]
+[ext_resource type="Script" uid="uid://ddju5slsm75t6" path="res://scripts/components/rotate_component.gd" id="6_ocwn1"]
+
+[sub_resource type="Curve" id="Curve_vrrpl"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -1.3075147, 0.0, 0, 0]
+point_count = 2
+
+[node name="TacoThreat" type="Node3D" unique_id=415357555]
+script = ExtResource("1_ygggp")
+
+[node name="StraightPath" parent="." unique_id=1485756112 instance=ExtResource("1_op0gi")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 1, 0)
+
+[node name="Taco" parent="." unique_id=1800477246 node_paths=PackedStringArray("init_path") instance=ExtResource("2_ygggp")]
+script = ExtResource("3_lu86l")
+post_fire_duration = 1.5
+stop_dist = 0.45
+max_speed = 12.0
+min_speed = 8.0
+speed_curve = SubResource("Curve_vrrpl")
+init_path = NodePath("../StraightPath")
+score_id = &"taco"
+
+[node name="RingBulletSpawner" type="Node3D" parent="Taco" unique_id=1941640059]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+script = ExtResource("4_idkfp")
+num_points = 2
+fire_rate = 12.0
+initial_delay = 0.7
+bullet_speed = 6.0
+autostart = false
+bullet_res = ExtResource("5_x53nq")
+metadata/_custom_type_script = "uid://dlcy0giqjc734"
+
+[node name="RotateComponent" type="Node" parent="Taco/RingBulletSpawner" unique_id=1954479041]
+script = ExtResource("6_ocwn1")
+rotate_speed = 3.0
+metadata/_custom_type_script = "uid://ddju5slsm75t6"
+
+[node name="RotateComponent" type="Node" parent="Taco" unique_id=1311470455]
+script = ExtResource("6_ocwn1")
+rotate_speed = 3.0
+metadata/_custom_type_script = "uid://ddju5slsm75t6"

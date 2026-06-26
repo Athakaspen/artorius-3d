@@ -8,7 +8,7 @@ extends PathEnemy
 @onready var speed_range: float = max_speed - min_speed
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	var path_end = 1 if not mirror else 0
 	if follower.progress_ratio == path_end:
 		self.queue_free()

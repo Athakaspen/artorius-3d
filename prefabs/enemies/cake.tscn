@@ -8,10 +8,10 @@
 height = 0.8
 radius = 1.0
 
-[node name="BurgerDouble" unique_id=1800477246 instance=ExtResource("1_eaobu")]
+[node name="Cake" unique_id=1800477246 instance=ExtResource("1_eaobu")]
 
-[node name="HitFlash" parent="." index="3" unique_id=1901981780 node_paths=PackedStringArray("visual")]
-visual = NodePath("")
+[node name="EnemyDamageable" parent="." index="0" unique_id=1689036248]
+max_hp = 400
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." index="4" unique_id=1815924020]
 shape = SubResource("CylinderShape3D_ybc6p")

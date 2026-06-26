@@ -114,6 +114,7 @@ zoom_in={
 3d_physics/layer_5="Bullets"
 3d_physics/layer_6="Pickups"
 3d_physics/layer_7="PlayerBoundary"
+3d_physics/layer_8="TutorialWall"
 
 [physics]
 

@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://bawn7e2nrlahm"]
+
+[ext_resource type="Script" uid="uid://b4mjnrs4coa0x" path="res://prefabs/threats/threat.gd" id="1_8edb0"]
+[ext_resource type="PackedScene" uid="uid://wjh1sibdcg2a" path="res://prefabs/paths/straight_path.tscn" id="2_byaco"]
+[ext_resource type="PackedScene" uid="uid://jgco0xm27m1j" path="res://prefabs/enemies/apple.tscn" id="3_ok6ou"]
+[ext_resource type="Script" uid="uid://6rydtgfrb0n2" path="res://scripts/path_follow_enemy.gd" id="4_2gv3a"]
+[ext_resource type="Script" uid="uid://c0ranomdeouh7" path="res://scripts/arc_bullet_spawner.gd" id="5_ok6ou"]
+[ext_resource type="PackedScene" uid="uid://dlnlgxuvrgnoa" path="res://prefabs/bullets/apple_bullet.tscn" id="6_ok6ou"]
+
+[sub_resource type="Curve" id="Curve_byaco"]
+_data = [Vector2(0, 0.83685803), 0.0, 0.0, 0, 0, Vector2(0.33387622, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[node name="AppleThreat" type="Node3D" unique_id=429944900]
+script = ExtResource("1_8edb0")
+
+[node name="StraightPath" parent="." unique_id=1485756112 instance=ExtResource("2_byaco")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="Apple" parent="." unique_id=1800477246 node_paths=PackedStringArray("init_path") instance=ExtResource("3_ok6ou")]
+script = ExtResource("4_2gv3a")
+speed_curve = SubResource("Curve_byaco")
+init_path = NodePath("../StraightPath")
+score_id = &"apple"
+
+[node name="RingBulletSpawner" type="Node3D" parent="Apple" unique_id=870157428]
+transform = Transform3D(0.8660254, 0, 0.5, 0, 1, 0, -0.5, 0, 0.8660254, 0, 0, 0)
+script = ExtResource("5_ok6ou")
+num_points = 3
+bullet_res = ExtResource("6_ok6ou")
+metadata/_custom_type_script = "uid://c0ranomdeouh7"

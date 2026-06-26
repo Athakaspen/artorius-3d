@@ -1,5 +1,6 @@
-extends SimpleComponent
 class_name LookAtPlayer
+extends SimpleComponent
+
 
 func _process(_delta: float) -> void:
 	if LevelObjects.Tim != null:

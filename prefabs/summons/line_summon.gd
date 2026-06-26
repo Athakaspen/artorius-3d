@@ -20,4 +20,5 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	if get_child_count() == 0:
+		LevelObjects.ScoreManager.give_defeat_score(&"line")
 		self.queue_free()

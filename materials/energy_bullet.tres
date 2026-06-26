@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" format=3 uid="uid://c3hqcw67pm2bk"]
 
-[ext_resource type="Shader" uid="uid://tv4uokhdqsal" path="res://prefabs/bullets/fresnel.gdshader" id="1_3fxdw"]
+[ext_resource type="Shader" uid="uid://tv4uokhdqsal" path="res://materials/shaders/fresnel.gdshader" id="1_3fxdw"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_7ctqi"]
 

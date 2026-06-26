@@ -1,16 +1,10 @@
 [gd_scene format=3 uid="uid://dkru18tpakyhk"]
 
 [ext_resource type="Script" uid="uid://cbu3sa0nerjrn" path="res://scripts/direction_speed_bullet.gd" id="1_hbvaf"]
+[ext_resource type="Material" uid="uid://c3hqcw67pm2bk" path="res://materials/energy_bullet.tres" id="2_2s0tf"]
 [ext_resource type="Script" uid="uid://b1je5whhp1e21" path="res://scripts/components/free_on_lifetime.gd" id="5_dceet"]
 [ext_resource type="Script" uid="uid://d3pv0v6ietsom" path="res://scripts/components/free_on_hit.gd" id="6_rhq03"]
 [ext_resource type="Script" uid="uid://e30v3d312jnn" path="res://scripts/components/bend_trajectory.gd" id="7_rhq03"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w48qg"]
-transparency = 1
-albedo_color = Color(0.87893015, 0.63550705, 0.31199086, 1)
-metallic = 0.59
-metallic_specular = 0.63
-roughness = 0.75
 
 [sub_resource type="SphereMesh" id="SphereMesh_bdcc4"]
 
@@ -21,7 +15,8 @@ script = ExtResource("1_hbvaf")
 collider = NodePath("Area3D")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=15845521]
-material_override = SubResource("StandardMaterial3D_w48qg")
+material_override = ExtResource("2_2s0tf")
+instance_shader_parameters/Color = Color(0.46816283, 0.8216849, 0.26014665, 1)
 mesh = SubResource("SphereMesh_bdcc4")
 
 [node name="Area3D" type="Area3D" parent="." unique_id=201416206]

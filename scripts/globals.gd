@@ -1,6 +1,6 @@
 extends Node
 
-var DirectionVectors : Dictionary[StringName, Vector3] = {
+var DirectionVectors: Dictionary[StringName, Vector3] = {
 	&"dir_up": Vector3.FORWARD,
 	&"dir_down": Vector3.BACK,
 	&"dir_left": Vector3.LEFT,
@@ -11,17 +11,24 @@ var DirectionVectors : Dictionary[StringName, Vector3] = {
 	&"dir_down_right": (Vector3.BACK + Vector3.RIGHT).normalized(),
 }
 
+
 func get_vector(dir: StringName) -> Vector3:
 	return DirectionVectors[dir]
 
+
 func dir_away(side: StringName) -> StringName:
 	match side:
-		&"side_top": return &"dir_down"
-		&"side_bottom": return &"dir_up"
-		&"side_left": return &"dir_right"
-		&"side_right": return &"dir_left"
-	print ("Unexpected side in dir_away")
+		&"side_top":
+			return &"dir_down"
+		&"side_bottom":
+			return &"dir_up"
+		&"side_left":
+			return &"dir_right"
+		&"side_right":
+			return &"dir_left"
+	print("Unexpected side in dir_away")
 	return &"dir_down"
 
+
 func random_vector_flat() -> Vector3:
-	return Vector3(randf()-0.5, 0, randf()-0.5)
+	return Vector3(randf() - 0.5, 0, randf() - 0.5)

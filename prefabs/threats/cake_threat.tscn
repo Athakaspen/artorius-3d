@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://btyu5m80rh7wt"]
+
+[ext_resource type="PackedScene" uid="uid://wjh1sibdcg2a" path="res://prefabs/paths/straight_path.tscn" id="1_45piw"]
+[ext_resource type="Script" uid="uid://b4mjnrs4coa0x" path="res://prefabs/threats/threat.gd" id="1_d8d83"]
+[ext_resource type="PackedScene" uid="uid://bc2m0t0sacdy3" path="res://prefabs/enemies/cake.tscn" id="2_d8d83"]
+[ext_resource type="PackedScene" uid="uid://bxedf2mwpc8bf" path="res://prefabs/paths/circle_path.tscn" id="3_sd2ft"]
+[ext_resource type="PackedScene" uid="uid://dwelbhedtbp1r" path="res://prefabs/paths/z_path.tscn" id="4_asiw3"]
+[ext_resource type="Script" uid="uid://dlcy0giqjc734" path="res://scripts/ring_bullet_spawner.gd" id="4_c3rh5"]
+[ext_resource type="PackedScene" uid="uid://cbo34i1nmq84k" path="res://prefabs/bullets/simple_bullet.tscn" id="5_1wipq"]
+[ext_resource type="Script" uid="uid://0df45wvqut7g" path="res://prefabs/enemies/cake.gd" id="6_4fd16"]
+[ext_resource type="Script" uid="uid://nujnf0phlvu1" path="res://scripts/single_bullet_spawner.gd" id="9_4fd16"]
+[ext_resource type="Script" uid="uid://ddju5slsm75t6" path="res://scripts/components/rotate_component.gd" id="9_4u0oe"]
+[ext_resource type="Script" uid="uid://b0tgts2hctv6g" path="res://scripts/components/look_at_player.gd" id="10_4u0oe"]
+
+[sub_resource type="Curve" id="Curve_dgh63"]
+_limits = [1.0, 20.0, 0.0, 1.0]
+_data = [Vector2(0, 17.990934), 0.0, 0.0, 0, 0, Vector2(1, 4.903322), -15.664307, 0.0, 0, 0]
+point_count = 2
+
+[node name="Cake" type="Node3D" unique_id=1263887776]
+script = ExtResource("1_d8d83")
+
+[node name="StraightPath" parent="." unique_id=1485756112 instance=ExtResource("1_45piw")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 1, 0)
+
+[node name="CirclePath" parent="." unique_id=1239574967 instance=ExtResource("3_sd2ft")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="ZPath" parent="." unique_id=1745736986 instance=ExtResource("4_asiw3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="Cake" parent="." unique_id=1800477246 instance=ExtResource("2_d8d83")]
+script = ExtResource("6_4fd16")
+intro_speed_curve = SubResource("Curve_dgh63")
+score_id = &"cake"
+
+[node name="EnemyDamageable" parent="Cake" index="0" unique_id=1689036248]
+max_hp = 360
+
+[node name="StationarySpawner" type="Node3D" parent="Cake" unique_id=1392444723]
+script = ExtResource("4_c3rh5")
+fire_rate = 3.2
+initial_delay = 0.0
+autostart = false
+bullet_res = ExtResource("5_1wipq")
+metadata/_custom_type_script = "uid://dlcy0giqjc734"
+
+[node name="RotateComponent" type="Node" parent="Cake/StationarySpawner" unique_id=866306699]
+script = ExtResource("9_4u0oe")
+metadata/_custom_type_script = "uid://ddju5slsm75t6"
+
+[node name="CircleSpawner" type="Node3D" parent="Cake" unique_id=2146154942]
+script = ExtResource("9_4fd16")
+fire_rate = 6.0
+initial_delay = 0.1
+autostart = false
+bullet_res = ExtResource("5_1wipq")
+metadata/_custom_type_script = "uid://nujnf0phlvu1"
+
+[node name="LookAtPlayer" type="Node" parent="Cake/CircleSpawner" unique_id=1872861799]
+script = ExtResource("10_4u0oe")
+metadata/_custom_type_script = "uid://b0tgts2hctv6g"
+
+[node name="ZSpawner" type="Node3D" parent="Cake" unique_id=1047380099]
+script = ExtResource("4_c3rh5")
+num_points = 11
+initial_delay = 0.0
+bullet_speed = 4.0
+autostart = false
+bullet_res = ExtResource("5_1wipq")
+metadata/_custom_type_script = "uid://dlcy0giqjc734"
+
+[editable path="Cake"]

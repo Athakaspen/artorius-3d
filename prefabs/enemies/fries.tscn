@@ -7,6 +7,12 @@
 
 [node name="Fries" unique_id=1800477246 instance=ExtResource("1_eqiq5")]
 
+[node name="EnemyDamageable" parent="." index="0" unique_id=1689036248]
+max_hp = 60
+
+[node name="DropPickup" parent="." index="1" unique_id=521959786]
+pickup_chance = 0.6
+
 [node name="HitFlash" parent="." index="3" unique_id=1901981780 node_paths=PackedStringArray("visual")]
 visual = NodePath("../fries")
 

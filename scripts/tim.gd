@@ -11,6 +11,10 @@ var is_focusing: bool = false
 @onready var player_damageable = $PlayerDamageable
 
 
+func _ready() -> void:
+	Singleton.connect("player_died", _on_player_died)
+
+
 func _physics_process(delta: float) -> void:
 	# Get the input direction and handle the movement/deceleration.
 	var input_dir := Input.get_vector("move_left", "move_right", "move_up", "move_down")
@@ -65,8 +69,8 @@ func _input(event):
 		var camera3d = get_viewport().get_camera_3d()
 		var origin = camera3d.project_ray_origin(event.position)
 		var direction = camera3d.project_ray_normal(event.position)
-		var len = -(origin.y - position.y) / direction.y
-		var point = origin + direction * len
+		var length = -(origin.y - position.y) / direction.y
+		var point = origin + direction * length
 		player_subtree.propagate_call("on_mouse_move", [point])
 
 
@@ -76,3 +80,12 @@ func take_damage() -> bool:
 
 func is_invincible():
 	return player_damageable.is_invincible
+
+
+func _on_player_died():
+	LevelObjects.DeathPanel.show_lose()
+	$"../../CameraManager/ThirdPersonCam".process_mode = Node.PROCESS_MODE_DISABLED
+	$"../../CameraManager/ThirdPersonCam2".process_mode = Node.PROCESS_MODE_DISABLED
+	$"../../LevelManager/AnimationPlayer".pause()
+	self.queue_free()
+	%Knife.queue_free()

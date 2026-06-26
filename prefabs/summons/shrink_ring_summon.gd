@@ -24,6 +24,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	if get_child_count() == 0:
+		LevelObjects.ScoreManager.give_defeat_score(&"shrink_ring")
 		self.queue_free()
 
 

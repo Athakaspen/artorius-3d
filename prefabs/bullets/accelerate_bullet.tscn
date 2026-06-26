@@ -2,14 +2,8 @@
 
 [ext_resource type="Script" uid="uid://cbu3sa0nerjrn" path="res://scripts/direction_speed_bullet.gd" id="1_6kq07"]
 [ext_resource type="Script" uid="uid://d3pv0v6ietsom" path="res://scripts/components/free_on_hit.gd" id="2_6kq07"]
+[ext_resource type="Material" uid="uid://c3hqcw67pm2bk" path="res://materials/energy_bullet.tres" id="2_56qbi"]
 [ext_resource type="Script" uid="uid://dxb3q62byfbdc" path="res://scripts/components/speed_curve.gd" id="3_brc7a"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w48qg"]
-transparency = 1
-albedo_color = Color(0.37254903, 0.77254903, 0.6862745, 1)
-metallic = 0.59
-metallic_specular = 0.63
-roughness = 0.75
 
 [sub_resource type="SphereMesh" id="SphereMesh_bdcc4"]
 radius = 0.35
@@ -23,7 +17,8 @@ script = ExtResource("1_6kq07")
 collider = NodePath("Area3D")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=845247046]
-material_override = SubResource("StandardMaterial3D_w48qg")
+material_override = ExtResource("2_56qbi")
+instance_shader_parameters/Color = Color(0.82, 0.16810003, 0.08200002, 1)
 mesh = SubResource("SphereMesh_bdcc4")
 
 [node name="Area3D" type="Area3D" parent="." unique_id=603529074]

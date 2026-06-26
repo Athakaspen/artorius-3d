@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://dwelbhedtbp1r"]
+
+[sub_resource type="Curve3D" id="Curve3D_imqtk"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, -7.5, 0, -7.5, 0, 0, 0, 0, 0, 0, 7.5, 0, -7.5, 0, 0, 0, 0, 0, 0, -7.5, 0, 7.5, 0, 0, 0, 0, 0, 0, 7.5, 0, 7.5),
+"tilts": PackedFloat32Array(0, 0, 0, 0)
+}
+point_count = 4
+
+[node name="ZPath" type="Path3D" unique_id=1745736986]
+curve = SubResource("Curve3D_imqtk")
