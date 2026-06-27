@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://j1872xlx5ck3"]
+
+[ext_resource type="AudioStream" uid="uid://b2o013g1tev5r" path="res://audio/pickup.wav" id="1_tcw7k"]
+[ext_resource type="Script" uid="uid://bd3u22lw74fau" path="res://audio/oneshot.gd" id="2_dlbga"]
+
+[node name="PickupSFX" type="AudioStreamPlayer3D" unique_id=1902203941]
+stream = ExtResource("1_tcw7k")
+script = ExtResource("2_dlbga")

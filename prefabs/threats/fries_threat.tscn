@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://wjh1sibdcg2a" path="res://prefabs/paths/straight_path.tscn" id="1_ge7s2"]
 [ext_resource type="Script" uid="uid://6rydtgfrb0n2" path="res://scripts/path_follow_enemy.gd" id="1_r84fe"]
 [ext_resource type="PackedScene" uid="uid://d4ngskxcy7axy" path="res://prefabs/enemies/fries.tscn" id="2_s2ikw"]
-[ext_resource type="Script" uid="uid://br0ms3cspo2yk" path="res://string_bullet_spawner.gd" id="3_r84fe"]
+[ext_resource type="Script" uid="uid://br0ms3cspo2yk" path="res://scripts/string_bullet_spawner.gd" id="3_r84fe"]
 [ext_resource type="PackedScene" uid="uid://dnm8mhq805th0" path="res://prefabs/bullets/fries_bullet.tscn" id="4_s2ikw"]
 
 [sub_resource type="Curve" id="Curve_co45q"]

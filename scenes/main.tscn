@@ -17,7 +17,7 @@
 [ext_resource type="Script" uid="uid://c3ticqx31o5xn" path="res://scripts/knife_visual_manager.gd" id="7_gqmmt"]
 [ext_resource type="Script" uid="uid://bdr1rykkfwm7e" path="res://scripts/camera_manager.gd" id="7_jscy8"]
 [ext_resource type="Script" uid="uid://c2tnf00fboqh7" path="res://scripts/score_manager.gd" id="8_2f3dj"]
-[ext_resource type="Shape3D" uid="uid://cowcj52wfpss5" path="res://player_shape.tres" id="8_a8y0u"]
+[ext_resource type="AudioStream" uid="uid://1gul2pyro7j6" path="res://audio/artorius-music.wav" id="8_j8jky"]
 [ext_resource type="Script" uid="uid://bit2ncux0jsm7" path="res://scripts/knife_hit_manager.gd" id="8_yc10j"]
 [ext_resource type="Script" uid="uid://bmij1nyxkj3wm" path="res://scripts/knife_fly_manager.gd" id="9_jscy8"]
 [ext_resource type="Material" uid="uid://husbjvdyujmi" path="res://materials/pixel_perfect_outline.tres" id="11_gqmmt"]
@@ -28,6 +28,7 @@
 [ext_resource type="Shader" uid="uid://l7tua5gd8aop" path="res://materials/test.gdshader" id="16_yc10j"]
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="17_gqmmt"]
 [ext_resource type="PackedScene" uid="uid://6nmn1naonmxa" path="res://models/sword/sword.tscn" id="19_0ld40"]
+[ext_resource type="AudioStream" uid="uid://bvcviqjxnywue" path="res://audio/damage.wav" id="25_kmb1v"]
 [ext_resource type="Script" uid="uid://nm7a8k1di07e" path="res://scripts/tutorial.gd" id="29_yq6so"]
 [ext_resource type="Script" uid="uid://ca62vebyl8okn" path="res://scripts/components/enemy_damageable.gd" id="31_j8jky"]
 [ext_resource type="Script" uid="uid://df3aqncha7eo5" path="res://scripts/components/free_on_dead.gd" id="32_kmb1v"]
@@ -104,7 +105,8 @@ func cahnge(new: int):
 "
 
 [sub_resource type="Gradient" id="Gradient_2f3dj"]
-colors = PackedColorArray(0, 0, 0, 1, 0.14, 0.14, 0.14, 1)
+offsets = PackedFloat32Array(0, 0.5240741, 0.80185187, 1)
+colors = PackedColorArray(0.09129339, 0.049200002, 0.41, 1, 0.2333838, 0.11228, 0.42038667, 1, 0.48404816, 0.22356059, 0.43870997, 1, 0.54, 0.2484, 0.4428, 1)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_v3a5a"]
 gradient = SubResource("Gradient_2f3dj")
@@ -188,13 +190,23 @@ size = Vector3(20.5, 2, 20.5)
 [sub_resource type="BoxShape3D" id="BoxShape3D_v3a5a"]
 size = Vector3(2, 2, 30)
 
+[sub_resource type="GDScript" id="GDScript_k0tud"]
+script/source = "extends AudioStreamPlayer
+
+#func _ready() -> void:
+	#play(114)
+
+func _on_finished() -> void:
+	play(58.4)
+"
+
 [sub_resource type="Resource" id="Resource_yc10j"]
 script = ExtResource("17_gqmmt")
 duration = 0.3
 
 [sub_resource type="Animation" id="Animation_w48qg"]
 resource_name = "level1"
-length = 120.0
+length = 118.0
 tracks/0/type = "method"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -213,7 +225,7 @@ tracks/1/path = NodePath("LevelManager/Formations")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(1.8, 5.3, 9.2, 12.166667, 19.933332, 27.166666, 28.466665, 29.833334, 35.566666, 46.633335, 49.266666, 59.466667, 67.9, 70.50001, 70.86667, 75.46667, 83.333336, 83.47181, 84.674385, 84.81286, 86.0282, 86.16667, 92.9, 93.02058, 98.700005, 99.433334, 102.333336, 104.63344, 106.256805, 108.13333, 109.81718, 111.69988, 113.41143, 114.12458, 115.18004, 116.14992, 116.40665, 119.166664),
+"times": PackedFloat32Array(1.8, 5.3, 9.2, 12.166667, 19.933332, 27.166666, 28.466665, 29.833334, 35.566666, 46.633335, 49.266666, 59.466667, 67.9, 70.50001, 70.86667, 75.46667, 75.62414, 83.333336, 83.47181, 84.674385, 84.81286, 86.0282, 86.16667, 92.9, 93.02058, 97.933334, 98.666664, 101.566666, 104.63344, 106.256805, 109.03333, 110.03333, 111.69988, 113.41143, 114.12458, 115.5, 115.75673, 117.9),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "values": [{
 "args": [0.0, 0],
@@ -264,6 +276,9 @@ tracks/1/keys = {
 "args": [Vector3(0, 0, 0), 0.0],
 "method": &"swoop"
 }, {
+"args": [Vector3(0, 0, 0), 180.0],
+"method": &"swoop"
+}, {
 "args": [7.0, 0],
 "method": &"apple"
 }, {
@@ -307,10 +322,7 @@ tracks/1/keys = {
 "method": &"line_summon"
 }, {
 "args": [],
-"method": &"line_summon"
-}, {
-"args": [],
-"method": &"line_summon"
+"method": &"ring_summon"
 }, {
 "args": [],
 "method": &"line_summon"
@@ -409,7 +421,14 @@ func _ready() -> void:
 	var radius = shape.radius + 0.01
 	sphere_mesh.radius = radius
 	sphere_mesh.height = radius*2
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed(\"show_hitbox\"):
+		visible = !visible
 "
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_j8jky"]
+radius = 0.3
 
 [sub_resource type="GDScript" id="GDScript_mte56"]
 script/source = "extends SimpleComponent
@@ -446,10 +465,6 @@ func apply_material_to_subtree(node: Node, mat: Material) -> void:
 	for child in node.get_children():
 		apply_material_to_subtree(child, mat)
 "
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_v3a5a"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1bvp3"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f8h0b"]
 albedo_color = Color(1, 0, 1, 1)
@@ -516,6 +531,7 @@ size = Vector2(4, 4)
 script/source = "extends Enemy
 
 func on_dead():
+	super()
 	$\"../..\".on_burger_dead()
 "
 
@@ -621,6 +637,12 @@ theme_override_constants/separation = 20
 layout_mode = 2
 theme_override_font_sizes/font_size = 96
 text = "YOU DIED"
+horizontal_alignment = 1
+
+[node name="tip" type="Label" parent="CanvasLayer/UI/DeathPanel/MarginContainer/VBoxContainer" unique_id=883156690]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Tip: Press H to toggle hitbox view"
 
 [node name="High Score" type="Label" parent="CanvasLayer/UI/DeathPanel/MarginContainer/VBoxContainer" unique_id=1522655356]
 layout_mode = 2
@@ -736,8 +758,9 @@ offset_right = 34.0
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0.7886668, 0.91, 1)
 theme_override_font_sizes/font_size = 150
-text = "THE END"
+text = "ok bye"
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1252001221]
 environment = SubResource("Environment_v3a5a")
@@ -814,11 +837,18 @@ process_physics_priority = 300
 script = ExtResource("4_dp3eg")
 metadata/_custom_type_script = "uid://bd046eokvcnu2"
 
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=178851118]
+stream = ExtResource("8_j8jky")
+autoplay = true
+script = SubResource("GDScript_k0tud")
+
 [node name="ScoreManager" type="Node" parent="." unique_id=1931939109]
 script = ExtResource("8_2f3dj")
 
 [node name="CameraManager" type="Node" parent="." unique_id=339056219 node_paths=PackedStringArray("overhead_pcam", "character_pcam", "dash_pcam")]
 script = ExtResource("7_jscy8")
+min_zoom = 6.5
+dash_dist = 2.0
 overhead_pcam = NodePath("OverheadPCam")
 character_pcam = NodePath("ThirdPersonCam")
 dash_pcam = NodePath("ThirdPersonCam2")
@@ -906,7 +936,7 @@ mesh = SubResource("SphereMesh_v3a5a")
 script = SubResource("GDScript_f8h0b")
 
 [node name="DashShapeCast" type="ShapeCast3D" parent="PlayerSubtree/Tim" unique_id=1228774771]
-shape = ExtResource("8_a8y0u")
+shape = SubResource("CapsuleShape3D_j8jky")
 collision_mask = 65
 
 [node name="SophiaSkin" parent="PlayerSubtree/Tim" unique_id=1044800334 instance=ExtResource("12_dp3eg")]
@@ -915,11 +945,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 [node name="HitFlash" type="Node" parent="PlayerSubtree/Tim/SophiaSkin" unique_id=2022965823]
 script = SubResource("GDScript_mte56")
 material = ExtResource("15_pm3ni")
-
-[node name="CapsuleMesh" type="MeshInstance3D" parent="PlayerSubtree/Tim" unique_id=1917269850]
-visible = false
-mesh = SubResource("CapsuleMesh_v3a5a")
-surface_material_override/0 = SubResource("StandardMaterial3D_1bvp3")
 
 [node name="KnifeFollowHolder" type="Node3D" parent="PlayerSubtree/Tim" unique_id=868031000]
 script = ExtResource("4_muem4")
@@ -943,11 +968,10 @@ transform = Transform3D(0.97, 0, 0, 0, 0.97, 0, 0, 0, 0.97, 0, 0.15, 0)
 material_override = SubResource("ShaderMaterial_jscy8")
 mesh = SubResource("PlaneMesh_v3a5a")
 
-[node name="DebugVisuals" type="Node" parent="PlayerSubtree/Tim" unique_id=907704069 node_paths=PackedStringArray("dash_charge", "tim_mesh")]
+[node name="DebugVisuals" type="Node" parent="PlayerSubtree/Tim" unique_id=907704069 node_paths=PackedStringArray("dash_charge")]
 process_mode = 4
 script = ExtResource("5_dp3eg")
 dash_charge = NodePath("../States/DashCharge")
-tim_mesh = NodePath("../CapsuleMesh")
 
 [node name="MouseMarker" type="MeshInstance3D" parent="PlayerSubtree/Tim/DebugVisuals" unique_id=1008251832]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 5)
@@ -958,6 +982,9 @@ mesh = SubResource("TorusMesh_dg77c")
 [node name="FlyMarker" type="MeshInstance3D" parent="PlayerSubtree/Tim/DebugVisuals" unique_id=1886788349]
 top_level = true
 mesh = SubResource("ImmediateMesh_f8h0b")
+
+[node name="DamageSFX" type="AudioStreamPlayer3D" parent="PlayerSubtree/Tim" unique_id=745080360]
+stream = ExtResource("25_kmb1v")
 
 [node name="Knife" type="Node3D" parent="PlayerSubtree" unique_id=2008080015 node_paths=PackedStringArray("follow_point")]
 unique_name_in_owner = true
@@ -1004,14 +1031,15 @@ script = ExtResource("29_yq6so")
 [node name="Move" type="Node3D" parent="Tutorial" unique_id=521024034]
 
 [node name="Label3D" type="Label3D" parent="Tutorial/Move" unique_id=1258775585]
-transform = Transform3D(0.99925965, 0, -0.038473234, 0.031576656, 0.571297, 0.82013583, 0.021979643, -0.82074344, 0.57087404, -0.07765865, 1.3520103, 2.2317362)
+transform = Transform3D(1, 0, 0, 0, 0.5721459, 0.82015187, 0, -0.82015187, 0.5721459, -0.07765865, 1.3520103, 2.2317362)
 text = "WASD / Left Stick to Move"
 font_size = 128
 
 [node name="Label3D2" type="Label3D" parent="Tutorial/Move" unique_id=230919449]
-transform = Transform3D(0.99925965, 0, -0.038473234, 0.031576656, 0.571297, 0.82013583, 0.021979643, -0.82074344, 0.57087404, -0.07765865, 1.3520103, -2.3316722)
+transform = Transform3D(1, 0, 0, 0, 0.5721459, 0.82015187, 0, -0.82015187, 0.5721459, -0.07765865, 1.3520103, -2.3316722)
+visible = false
 text = "Note: Web has some
-vusual and performance issues.
+visual and performance issues.
 Downloaded version is preferable."
 font_size = 128
 
@@ -1114,6 +1142,7 @@ font_size = 128
 [connection signal="pressed" from="CanvasLayer/UI/WinPanel/MarginContainer/VBoxContainer/HBoxContainer/Retry" to="." method="do_restart"]
 [connection signal="body_entered" from="ArenaEnemyArea" to="ArenaEnemyArea" method="_on_body_entered"]
 [connection signal="body_exited" from="ArenaEnemyArea" to="ArenaEnemyArea" method="_on_body_exited"]
+[connection signal="finished" from="AudioStreamPlayer" to="AudioStreamPlayer" method="_on_finished"]
 [connection signal="score_change" from="ScoreManager" to="CanvasLayer/UI/ScoreMargin/ScoreLabel" method="_on_score_manager_score_change"]
 [connection signal="score_change" from="ScoreManager" to="CanvasLayer/UI/WinPanel/MarginContainer/VBoxContainer/Score" method="_on_score_manager_score_change"]
 [connection signal="animation_finished" from="LevelManager/AnimationPlayer" to="LevelManager" method="_on_animation_player_animation_finished"]

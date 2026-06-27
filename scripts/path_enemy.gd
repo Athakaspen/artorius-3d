@@ -10,6 +10,7 @@ var follower: PathFollow3D
 
 
 func _ready() -> void:
+	super()
 	if init_path != null:
 		set_path(init_path)
 	sync_position()

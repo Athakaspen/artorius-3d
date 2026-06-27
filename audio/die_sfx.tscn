@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://burq7sv7wg88q"]
+
+[ext_resource type="AudioStream" uid="uid://c84yb8irx5id8" path="res://audio/die.wav" id="1_cwxrx"]
+[ext_resource type="Script" uid="uid://bd3u22lw74fau" path="res://audio/oneshot.gd" id="2_fwsnr"]
+
+[node name="DieSFX" type="AudioStreamPlayer3D" unique_id=13762654]
+stream = ExtResource("1_cwxrx")
+script = ExtResource("2_fwsnr")

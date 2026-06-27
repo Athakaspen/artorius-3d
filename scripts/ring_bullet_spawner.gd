@@ -12,3 +12,4 @@ func fire():
 		bullet.direction = (-basis.z).rotated(Vector3.UP, angle).normalized()
 		bullet.speed = bullet_speed
 		LevelObjects.BulletSubtree.add_child(bullet)
+	shoot_sfx.play()

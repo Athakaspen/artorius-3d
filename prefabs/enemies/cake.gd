@@ -26,6 +26,7 @@ var z_follow: PathFollow3D
 
 
 func _ready() -> void:
+	super()
 	intro_follow = _create_path_follow($"../StraightPath")
 	circle_follow = _create_path_follow($"../CirclePath")
 	circle_follow.loop = true

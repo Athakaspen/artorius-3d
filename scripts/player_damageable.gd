@@ -38,6 +38,7 @@ func take_damage() -> bool:
 
 	Singleton.remove_life()
 	start_invincible(invincible_time_damage, true)
+	$"../DamageSFX".play()
 	return true
 
 

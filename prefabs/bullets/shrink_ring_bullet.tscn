@@ -12,6 +12,11 @@ height = 0.9
 [sub_resource type="SphereShape3D" id="SphereShape3D_3hjku"]
 radius = 0.25
 
+[sub_resource type="Curve" id="Curve_3w6fm"]
+_limits = [-1.0, 1.0, 0.0, 1.0]
+_data = [Vector2(0, 0.001785636), 0.0, -3.1891627, 0, 0, Vector2(0.1626506, -0.73809516), -0.30999103, 3.0072465, 0, 0, Vector2(1, 1), 0.5928568, 0.0, 0, 0]
+point_count = 3
+
 [node name="Bullet" type="Node3D" unique_id=2025275252 node_paths=PackedStringArray("collider")]
 script = ExtResource("1_1534g")
 collider = NodePath("Area3D")
@@ -37,4 +42,5 @@ metadata/_custom_type_script = "uid://d3pv0v6ietsom"
 script = ExtResource("3_3w6fm")
 slow_speed = 0.0
 fast_speed = 6.0
+curve = SubResource("Curve_3w6fm")
 metadata/_custom_type_script = "uid://dxb3q62byfbdc"

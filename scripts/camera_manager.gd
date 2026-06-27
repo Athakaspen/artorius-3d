@@ -9,7 +9,7 @@ extends Node
 @export var character_pcam: PhantomCamera3D
 @export var dash_pcam: PhantomCamera3D
 
-var zoom_level: float = 8.0
+var zoom_level: float = 8.5
 
 
 func _ready() -> void:

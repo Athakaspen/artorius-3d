@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://djm0hr37qgg6s"]
+
+[ext_resource type="AudioStream" uid="uid://c6v3nhjlxbknn" path="res://audio/shoot.wav" id="1_k0tud"]
+
+[node name="ShootSFX" type="AudioStreamPlayer3D" unique_id=1418137332]
+stream = ExtResource("1_k0tud")
+volume_db = -0.5

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://b0nqg5mw1tu6q"]
 
-[ext_resource type="Shader" uid="uid://b7kivcyfql1ml" path="res://telegraph_marker.gdshader" id="1_ewn37"]
+[ext_resource type="Shader" uid="uid://b7kivcyfql1ml" path="res://materials/shaders/telegraph_marker.gdshader" id="1_ewn37"]
 [ext_resource type="Shader" uid="uid://l7tua5gd8aop" path="res://materials/test.gdshader" id="2_854ij"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_khduo"]

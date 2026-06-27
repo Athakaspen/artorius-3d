@@ -1,5 +1,7 @@
 extends Node3D
 
+const sfx_res = preload("res://audio/pickup_sfx.tscn")
+
 var lifetime: float = 5.0 # seconds
 
 
@@ -29,4 +31,7 @@ func _physics_process(_delta: float) -> void:
 		else:
 			Singleton.add_life()
 			LevelObjects.ScoreManager.give_life_score()
+			var sfx: AudioStreamPlayer3D = sfx_res.instantiate()
+			sfx.position = global_position
+			LevelObjects.PickupSubtree.add_child(sfx)
 			self.queue_free()

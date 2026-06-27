@@ -13,22 +13,23 @@ var knife_material: StandardMaterial3D
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	tim_material = tim_mesh.get_active_material(0)
+	pass
+	#tim_material = tim_mesh.get_active_material(0)
 	#knife_material = knife_mesh.get_active_material(0)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
-	if tim.is_invincible():
-		tim_material.albedo_color = Color.BLACK
-	elif dash_charge.active:
-		var amt = dash_charge.charge_amount
-		tim_material.albedo_color = Color(0.7 - amt * 0.7, 1.0, 0.7 - amt * 0.7)
-	else:
-		if tim.is_focusing:
-			tim_material.albedo_color = Color.BLUE
-		else:
-			tim_material.albedo_color = Color.WHITE
+	#if tim.is_invincible():
+	#tim_material.albedo_color = Color.BLACK
+	#elif dash_charge.active:
+	#var amt = dash_charge.charge_amount
+	#tim_material.albedo_color = Color(0.7 - amt * 0.7, 1.0, 0.7 - amt * 0.7)
+	#else:
+	#if tim.is_focusing:
+	#tim_material.albedo_color = Color.BLUE
+	#else:
+	#tim_material.albedo_color = Color.WHITE
 
 	#if %PlayerDamageable.is_nohit_mode:
 	#knife_material.albedo_color = Color.BLACK

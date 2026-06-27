@@ -4,7 +4,7 @@ extends BulletComponent
 @export var slow_speed: float = 5
 @export var fast_speed: float = 10
 @export var change_duration: float = 1 # seconds
-@export var curve: Curve = preload("uid://bsw6n7johpt3g")
+@export var curve: Curve = Curve.new()
 
 @onready var speed_range = fast_speed - slow_speed
 

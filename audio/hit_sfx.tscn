@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cqkx3ejpxonwa"]
+
+[ext_resource type="AudioStream" uid="uid://5uujpevirb88" path="res://audio/hit.wav" id="1_ykn8t"]
+
+[node name="HitSFX" type="AudioStreamPlayer3D" unique_id=147991742]
+stream = ExtResource("1_ykn8t")

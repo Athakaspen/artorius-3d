@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" format=3 uid="uid://dnf3oxvy8po54"]
 
-[ext_resource type="Shader" uid="uid://dfaqyyg5dhqc8" path="res://wave.gdshader" id="1_u2ihi"]
+[ext_resource type="Shader" uid="uid://dfaqyyg5dhqc8" path="res://materials/shaders/wave.gdshader" id="1_u2ihi"]
 [ext_resource type="Texture2D" uid="uid://bpbvhru5th6ff" path="res://textures/rug.png" id="2_u2ihi"]
 
 [resource]
